@@ -1,22 +1,29 @@
 import ply.lex as lex
 import dill
 tokens = (
+    'STRING',
     'CREATE',
-    'MODEL','STRING',
-    'TYPE', 
-    'REGULARIZER'
+    'MODEL',
+    'REGULARIZER',
+    'TYPE'
 )
 
 #regular expressions
 
-t_CREATE = r'CREATE'
-t_MODEL = r'MODEL'
-t_REGULARIZER = r'REGULARIZER'
-
-def t_STRING(t):
-    r'\w+'
-    t.value = t
+t_STRING = r'[a-zA-Z_][a-zA-Z_0-9]*'
+def t_CREATE(t):
+    r'CREATE'
     return t
+def t_MODEL(t):
+    r'MODEL'
+    return t
+def t_REGULARIZER(t):
+    r'REGULARIZER'
+    return t
+def t_TYPE(t):
+    r'TYPE'
+    return t
+    
  
 # Define a rule so we can track line numbers
 def t_newline(t):
