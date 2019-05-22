@@ -1,1 +1,3 @@
-basicSQL = []
+basicSQL = [
+    'SELECT'
+]
