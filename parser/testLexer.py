@@ -1,29 +1,22 @@
 import ply.lex as lex
 import dill
-tokens = [
-    'ALPHA_NUMERIC',
-    'CREATE',
-    'MODEL',
-    'REGULARIZER',
-    'TYPE'
-]
+from tokens.definitions import *
+from tokens.data_types import *
+from tokens.manipulations import *
+from tokens.sql import *
+from partLexer import *
+tokens =  list(set().union(
+
+            modelTokens,
+            dataTypeTokens,
+            trainTokens,
+            trainProfileTokens,
+            basicSQL
+            ))
 
 #regular expressions
 
 t_ALPHA_NUMERIC = r'[a-zA-Z_][a-zA-Z_0-9]*'
-def t_CREATE(t):
-    r'CREATE'
-    return t
-def t_MODEL(t):
-    r'MODEL'
-    return t
-def t_REGULARIZER(t):
-    r'REGULARIZER'
-    return t
-def t_TYPE(t):
-    r'TYPE'
-    return t
-    
  
 # Define a rule so we can track line numbers
 def t_newline(t):

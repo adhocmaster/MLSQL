@@ -11,10 +11,9 @@ modelTokens = [
 trainProfileTokens = [
     'CREATE',
     'AND'
-    'TRAINING PROFILE',
-    'BATCH SIZE',
+    'TRAINING_PROFILE',
+    'BATCH_SIZE',
     'EPOCH',
-    'SUFFLE'
-
-
+    'SUFFLE',
+    'WITH'
 ]
