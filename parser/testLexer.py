@@ -1,16 +1,16 @@
 import ply.lex as lex
 import dill
-tokens = (
-    'STRING',
+tokens = [
+    'ALPHA_NUMERIC',
     'CREATE',
     'MODEL',
     'REGULARIZER',
     'TYPE'
-)
+]
 
 #regular expressions
 
-t_STRING = r'[a-zA-Z_][a-zA-Z_0-9]*'
+t_ALPHA_NUMERIC = r'[a-zA-Z_][a-zA-Z_0-9]*'
 def t_CREATE(t):
     r'CREATE'
     return t
