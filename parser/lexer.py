@@ -4,7 +4,6 @@ from tokens.definitions import *
 from tokens.data_types import *
 from tokens.manipulations import *
 from tokens.sql import *
-from partLexer import *
 tokens =  list(set().union(
 
             modelTokens,
@@ -33,5 +32,5 @@ def t_error(t):
 
 lexer = lex.lex()
 
-with open("parser/testLexer.dill", "wb") as f:
+with open("parser/lexer.dill", "wb") as f:
     dill.dump(lexer, f)
