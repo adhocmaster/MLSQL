@@ -21,6 +21,11 @@ tokens =  list(set().union(
 
 print(tokens)
 
+def t_SQL(t):
+    r'\[\s*[SELECT,UPDATE]+[^\]]*\]'
+    t.value = t.value[1:len(t.value)].strip()
+    return t
+
 # keywords rule
 reKyewords = "(" + "|".join(keywords) + ")+[ \n\t]{1}"
 @TOKEN(reKyewords)
