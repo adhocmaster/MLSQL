@@ -17,6 +17,8 @@ trainProfileTokens = [
     'WITH'
 ]
 
+    
+"""
 def t_CREATE(t):
     r'CREATE'
     return t
@@ -35,3 +37,4 @@ def t_TYPE(t):
 def t_FORMULA(t):
     r'TYPE'
     return t
+"""

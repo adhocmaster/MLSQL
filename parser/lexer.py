@@ -1,27 +1,45 @@
 import ply.lex as lex
+from ply.lex import TOKEN
 import dill
-from tokens.definitions import *
-from tokens.data_types import *
 from tokens.manipulations import *
 from tokens.sql import *
+from tokens.definitions import *
+from tokens.data_types import *
+
+
+keywords = list(set().union(
+            modelTokens,
+            trainTokens,
+            trainProfileTokens
+            ))
 tokens =  list(set().union(
 
-            modelTokens,
             dataTypeTokens,
-            trainTokens,
-            trainProfileTokens,
             basicSQL
-            ))
 
-#regular expressions
+            )) + keywords
 
-t_ALPHA_NUMERIC = r'[a-zA-Z_][a-zA-Z_0-9]*'
+print(tokens)
+
+# keywords rule
+reKyewords = "(" + "|".join(keywords) + ")+[ \n\t]{1}"
+@TOKEN(reKyewords)
+def t_KEYWORD(t):
+    print("I am in t_KEYWORD")
+    t.value = t.value.strip()
+    t.type = t.value
+    return t
  
 # Define a rule so we can track line numbers
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
+def t_TRAINING_PROFILE(t):
+    r'TRAINING[_ \t\n]+PROFILE'
+    t.type = 'TRAINING_PROFILE'
+    print("I am in t_TRAINING_PROFILE")
+    return t
 # A string containing ignored characters (spaces and tabs)
 t_ignore  = ' \t'
 

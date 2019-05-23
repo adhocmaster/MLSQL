@@ -1,3 +1,6 @@
 basicSQL = [
-    'SELECT'
+    'SQL'
 ]
+
+def t_SQL(t):
+    r"\[SELECT|UPDATE.+\]"
