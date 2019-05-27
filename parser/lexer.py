@@ -22,15 +22,15 @@ tokens =  list(set().union(
 print(tokens)
 
 def t_SQL(t):
-    r'\[\s*[SELECT,UPDATE]+[^\]]*\]'
-    t.value = t.value[1:len(t.value)].strip()
+    r'\[\s*[SELECT,UPDATE]+[^\];]*\]'
+    t.value = t.value[1:len(t.value)-1].strip()
     return t
 
 # keywords rule
 reKyewords = "(" + "|".join(keywords) + ")+[ \n\t]{1}"
 @TOKEN(reKyewords)
 def t_KEYWORD(t):
-    print("I am in t_KEYWORD")
+    print(f"found keyword: {t.value}")
     t.value = t.value.strip()
     t.type = t.value
     return t

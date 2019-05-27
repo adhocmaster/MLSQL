@@ -4,7 +4,9 @@ modelTokens = [
     'REGULARIZER',
     'TYPE',
     'FORMULA',
-    'FORMULA_OPERATOR'
+    'FORMULA_OPERATOR',
+    'LOSS',
+    'OPTIMIZER'
 ]
 
 trainProfileTokens = [
@@ -13,7 +15,7 @@ trainProfileTokens = [
     'TRAINING_PROFILE',
     'BATCH_SIZE',
     'EPOCH',
-    'SUFFLE',
+    'SHUFFLE',
     'WITH'
 ]
 

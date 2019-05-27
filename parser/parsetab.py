@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'ALPHA_NUMERIC ANDTRAINING_PROFILE BATCH_SIZE CREATE EPOCH FLOAT FORMULA FORMULA_OPERATOR INTEGER MODEL REGULARIZER SQL SUFFLE TRAIN TRAINING_PROFILE TYPE WITHexpression : CREATE MODEL ALPHA_NUMERIC'
+_lr_signature = 'ANDTRAINING_PROFILE BATCH_SIZE CREATE DELIMITER EPOCH FLOAT FORMULA FORMULA_OPERATOR INTEGER MODEL REGULARIZER SQL SUFFLE TRAIN TRAINING_PROFILE TYPE WITH WORDexpression : CREATE MODEL WORD TYPE WORD REGULARIZER WORD DELIMITERexpression : SQL DELIMITER'
     
-_lr_action_items = {'CREATE':([0,],[2,]),'$end':([1,4,],[0,-1,]),'MODEL':([2,],[3,]),'ALPHA_NUMERIC':([3,],[4,]),}
+_lr_action_items = {'CREATE':([0,],[2,]),'SQL':([0,],[3,]),'$end':([1,5,11,],[0,-2,-1,]),'MODEL':([2,],[4,]),'DELIMITER':([3,10,],[5,11,]),'WORD':([4,7,9,],[6,8,10,]),'TYPE':([6,],[7,]),'REGULARIZER':([8,],[9,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -27,5 +27,6 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> expression","S'",1,None,None,None),
-  ('expression -> CREATE MODEL ALPHA_NUMERIC','expression',3,'p_create_model','parser.py',9),
+  ('expression -> CREATE MODEL WORD TYPE WORD REGULARIZER WORD DELIMITER','expression',8,'p_create_model','parser.py',9),
+  ('expression -> SQL DELIMITER','expression',2,'p_SQL','parser.py',16),
 ]

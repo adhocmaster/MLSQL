@@ -9,38 +9,37 @@ Unused terminals:
     FORMULA
     FORMULA_OPERATOR
     INTEGER
-    REGULARIZER
-    SQL
     SUFFLE
     TRAIN
     TRAINING_PROFILE
-    TYPE
     WITH
 
 Grammar
 
 Rule 0     S' -> expression
-Rule 1     expression -> CREATE MODEL ALPHA_NUMERIC
+Rule 1     expression -> CREATE MODEL WORD TYPE WORD REGULARIZER WORD DELIMITER
+Rule 2     expression -> SQL DELIMITER
 
 Terminals, with rules where they appear
 
-ALPHA_NUMERIC        : 1
 ANDTRAINING_PROFILE  : 
 BATCH_SIZE           : 
 CREATE               : 1
+DELIMITER            : 1 2
 EPOCH                : 
 FLOAT                : 
 FORMULA              : 
 FORMULA_OPERATOR     : 
 INTEGER              : 
 MODEL                : 1
-REGULARIZER          : 
-SQL                  : 
+REGULARIZER          : 1
+SQL                  : 2
 SUFFLE               : 
 TRAIN                : 
 TRAINING_PROFILE     : 
-TYPE                 : 
+TYPE                 : 1
 WITH                 : 
+WORD                 : 1 1 1
 error                : 
 
 Nonterminals, with rules where they appear
@@ -52,9 +51,11 @@ Parsing method: LALR
 state 0
 
     (0) S' -> . expression
-    (1) expression -> . CREATE MODEL ALPHA_NUMERIC
+    (1) expression -> . CREATE MODEL WORD TYPE WORD REGULARIZER WORD DELIMITER
+    (2) expression -> . SQL DELIMITER
 
     CREATE          shift and go to state 2
+    SQL             shift and go to state 3
 
     expression                     shift and go to state 1
 
@@ -66,21 +67,70 @@ state 1
 
 state 2
 
-    (1) expression -> CREATE . MODEL ALPHA_NUMERIC
+    (1) expression -> CREATE . MODEL WORD TYPE WORD REGULARIZER WORD DELIMITER
 
-    MODEL           shift and go to state 3
+    MODEL           shift and go to state 4
 
 
 state 3
 
-    (1) expression -> CREATE MODEL . ALPHA_NUMERIC
+    (2) expression -> SQL . DELIMITER
 
-    ALPHA_NUMERIC   shift and go to state 4
+    DELIMITER       shift and go to state 5
 
 
 state 4
 
-    (1) expression -> CREATE MODEL ALPHA_NUMERIC .
+    (1) expression -> CREATE MODEL . WORD TYPE WORD REGULARIZER WORD DELIMITER
 
-    $end            reduce using rule 1 (expression -> CREATE MODEL ALPHA_NUMERIC .)
+    WORD            shift and go to state 6
+
+
+state 5
+
+    (2) expression -> SQL DELIMITER .
+
+    $end            reduce using rule 2 (expression -> SQL DELIMITER .)
+
+
+state 6
+
+    (1) expression -> CREATE MODEL WORD . TYPE WORD REGULARIZER WORD DELIMITER
+
+    TYPE            shift and go to state 7
+
+
+state 7
+
+    (1) expression -> CREATE MODEL WORD TYPE . WORD REGULARIZER WORD DELIMITER
+
+    WORD            shift and go to state 8
+
+
+state 8
+
+    (1) expression -> CREATE MODEL WORD TYPE WORD . REGULARIZER WORD DELIMITER
+
+    REGULARIZER     shift and go to state 9
+
+
+state 9
+
+    (1) expression -> CREATE MODEL WORD TYPE WORD REGULARIZER . WORD DELIMITER
+
+    WORD            shift and go to state 10
+
+
+state 10
+
+    (1) expression -> CREATE MODEL WORD TYPE WORD REGULARIZER WORD . DELIMITER
+
+    DELIMITER       shift and go to state 11
+
+
+state 11
+
+    (1) expression -> CREATE MODEL WORD TYPE WORD REGULARIZER WORD DELIMITER .
+
+    $end            reduce using rule 1 (expression -> CREATE MODEL WORD TYPE WORD REGULARIZER WORD DELIMITER .)
 
