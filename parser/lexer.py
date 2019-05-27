@@ -45,6 +45,11 @@ def t_TRAINING_PROFILE(t):
     t.type = 'TRAINING_PROFILE'
     print("I am in t_TRAINING_PROFILE")
     return t
+def t_LEARNING_RATE(t):
+    r'LEARNING[_ \t\n]+RATE'
+    t.type = 'LEARNING_RATE'
+    print("I am in t_LEARNING_RATE")
+    return t
 # A string containing ignored characters (spaces and tabs)
 t_ignore  = ' \t'
 
