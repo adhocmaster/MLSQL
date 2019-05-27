@@ -7,10 +7,10 @@ states = ['MODEL', 'TRAIN', 'TRAINING_PROFILE' ]
 currentState = None
 def p_create_model(p):
     'expression : CREATE MODEL ALPHA_NUMERIC'
-    # 'expression : SELECT columns FROM TABLE END'
     global currentState
     currentState = MODEL
-    print(p)
+    p[0] = "I can be anything"
+    print( f" p[0] = {p[0]}" )
 
 def p_error(t):
     print('Syntax error at "%s"' % t.value if t else 'NULL')
@@ -19,11 +19,23 @@ def p_error(t):
 
 parser = yacc.yacc()
 
-with open("parser/parser.dill", "wb") as f:
-    dill.dump(parser, f)
+# with open("parser/parser.dill", "wb") as f:
+#     dill.dump(parser, f)
 
-data = '''
-CREATE MODEL modName
-'''
 
-parser.parse(data)
+# data = '''
+# CREATE MODEL modName
+# '''
+
+# parser.parse(data)
+
+if __name__ == "__main__":
+
+    userInput  = ''
+
+    while userInput != 'exit':
+        userInput = input().strip()
+        p = parser.parse(userInput)
+        print(p)
+
+    pass
