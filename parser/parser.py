@@ -1,7 +1,29 @@
+projectFolder = 'F:/myProjects/tfKeras/UCSC/CMPS203/MLSQL/'
+import logging, sys, math,os
+
+# currentFolder = os.path.abspath('')
+# try:
+#     sys.path.remove(str(currentFolder))
+# except ValueError: # Already removed
+#     pass
+
+sys.path.append(str(projectFolder))
+
+# logging.basicConfig(
+#     level = logging.DEBUG,
+#     filename = "parselog.txt",
+#     filemode = "w",
+#     format = "%(filename)10s:%(lineno)4d:%(message)s"
+# )
+# log = logging.getLogger()
+
 import ply.yacc as yacc
 import dill
 from lexer import tokens
+from engine.ASTProcessor import ASTProcessor
+from data import Estimator
 
+ASTProcessor = ASTProcessor()
 ESTIMATOR, TRAIN, TRAINING_PROFILE = range(3)
 states = ['ESTIMATOR', 'TRAIN', 'TRAINING_PROFILE' ]
 currentState = None
@@ -19,7 +41,7 @@ def p_create_model(p):
 
     name = p[3]
     estimatorType = p[5]
-    loss = 'MSE'
+    loss = None
     lr = 0.001
     optimizer = None
     regularizer = None
@@ -32,7 +54,11 @@ def p_create_model(p):
         optimizer = p[11]
         regularizer = p[13]
 
-    
+    try:
+        estimator = ASTProcessor.createEstimator(name=name, estimatorType=estimatorType, loss=loss, lr=lr, optimizer=optimizer, regularizer=regularizer)
+        print(f"Created estimator with name {name} {estimator}")
+    except Exception as e:
+        print(e)
 
 
 
@@ -52,6 +78,7 @@ def p_error(t):
     global current_state
     current_state = None
 
+# parser = yacc.yacc(debug=True, errorlog=log)
 parser = yacc.yacc()
 
 # with open("parser/parser.dill", "wb") as f:

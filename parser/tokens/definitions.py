@@ -1,13 +1,13 @@
 modelTokens = [
     'CREATE',
     'MODEL',
-    'ESTIMATOR'
+    'ESTIMATOR',
     'REGULARIZER',
     'TYPE',
     'FORMULA',
     'FORMULA_OPERATOR',
     'LOSS',
-    'LEARNING_RATE'
+    'LEARNING_RATE',
     'OPTIMIZER'
 ]
 

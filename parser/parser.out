@@ -3,43 +3,47 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 Unused terminals:
 
     ANDTRAINING_PROFILE
-    BATCH_SIZE
-    EPOCH
-    FLOAT
     FORMULA
     FORMULA_OPERATOR
-    INTEGER
-    SUFFLE
+    MODEL
     TRAIN
-    TRAINING_PROFILE
     WITH
 
 Grammar
 
 Rule 0     S' -> expression
-Rule 1     expression -> CREATE MODEL WORD TYPE WORD REGULARIZER WORD DELIMITER
-Rule 2     expression -> SQL DELIMITER
+Rule 1     expression -> CREATE ESTIMATOR WORD TYPE WORD DELIMITER
+Rule 2     expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD DELIMITER
+Rule 3     expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT DELIMITER
+Rule 4     expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER
+Rule 5     expression -> SQL DELIMITER
+Rule 6     expression -> CREATE TRAINING_PROFILE WORD BATCH_SIZE INT EPOCH INT SHUFFLE BOOL
 
 Terminals, with rules where they appear
 
 ANDTRAINING_PROFILE  : 
-BATCH_SIZE           : 
-CREATE               : 1
-DELIMITER            : 1 2
-EPOCH                : 
-FLOAT                : 
+BATCH_SIZE           : 6
+BOOL                 : 6
+CREATE               : 1 2 3 4 6
+DELIMITER            : 1 2 3 4 5
+EPOCH                : 6
+ESTIMATOR            : 1 2 3 4
+FLOAT                : 3 4
 FORMULA              : 
 FORMULA_OPERATOR     : 
-INTEGER              : 
-MODEL                : 1
-REGULARIZER          : 1
-SQL                  : 2
-SUFFLE               : 
+INT                  : 6 6
+LEARNING_RATE        : 3 4
+LOSS                 : 2 3 4
+MODEL                : 
+OPTIMIZER            : 4
+REGULARIZER          : 4
+SHUFFLE              : 6
+SQL                  : 5
 TRAIN                : 
-TRAINING_PROFILE     : 
-TYPE                 : 1
+TRAINING_PROFILE     : 6
+TYPE                 : 1 2 3 4
 WITH                 : 
-WORD                 : 1 1 1
+WORD                 : 1 1 2 2 2 3 3 3 4 4 4 4 4 6
 error                : 
 
 Nonterminals, with rules where they appear
@@ -51,8 +55,12 @@ Parsing method: LALR
 state 0
 
     (0) S' -> . expression
-    (1) expression -> . CREATE MODEL WORD TYPE WORD REGULARIZER WORD DELIMITER
-    (2) expression -> . SQL DELIMITER
+    (1) expression -> . CREATE ESTIMATOR WORD TYPE WORD DELIMITER
+    (2) expression -> . CREATE ESTIMATOR WORD TYPE WORD LOSS WORD DELIMITER
+    (3) expression -> . CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT DELIMITER
+    (4) expression -> . CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER
+    (5) expression -> . SQL DELIMITER
+    (6) expression -> . CREATE TRAINING_PROFILE WORD BATCH_SIZE INT EPOCH INT SHUFFLE BOOL
 
     CREATE          shift and go to state 2
     SQL             shift and go to state 3
@@ -67,70 +75,215 @@ state 1
 
 state 2
 
-    (1) expression -> CREATE . MODEL WORD TYPE WORD REGULARIZER WORD DELIMITER
+    (1) expression -> CREATE . ESTIMATOR WORD TYPE WORD DELIMITER
+    (2) expression -> CREATE . ESTIMATOR WORD TYPE WORD LOSS WORD DELIMITER
+    (3) expression -> CREATE . ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT DELIMITER
+    (4) expression -> CREATE . ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER
+    (6) expression -> CREATE . TRAINING_PROFILE WORD BATCH_SIZE INT EPOCH INT SHUFFLE BOOL
 
-    MODEL           shift and go to state 4
+    ESTIMATOR       shift and go to state 4
+    TRAINING_PROFILE shift and go to state 5
 
 
 state 3
 
-    (2) expression -> SQL . DELIMITER
+    (5) expression -> SQL . DELIMITER
 
-    DELIMITER       shift and go to state 5
+    DELIMITER       shift and go to state 6
 
 
 state 4
 
-    (1) expression -> CREATE MODEL . WORD TYPE WORD REGULARIZER WORD DELIMITER
+    (1) expression -> CREATE ESTIMATOR . WORD TYPE WORD DELIMITER
+    (2) expression -> CREATE ESTIMATOR . WORD TYPE WORD LOSS WORD DELIMITER
+    (3) expression -> CREATE ESTIMATOR . WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT DELIMITER
+    (4) expression -> CREATE ESTIMATOR . WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER
 
-    WORD            shift and go to state 6
+    WORD            shift and go to state 7
 
 
 state 5
 
-    (2) expression -> SQL DELIMITER .
-
-    $end            reduce using rule 2 (expression -> SQL DELIMITER .)
-
-
-state 6
-
-    (1) expression -> CREATE MODEL WORD . TYPE WORD REGULARIZER WORD DELIMITER
-
-    TYPE            shift and go to state 7
-
-
-state 7
-
-    (1) expression -> CREATE MODEL WORD TYPE . WORD REGULARIZER WORD DELIMITER
+    (6) expression -> CREATE TRAINING_PROFILE . WORD BATCH_SIZE INT EPOCH INT SHUFFLE BOOL
 
     WORD            shift and go to state 8
 
 
+state 6
+
+    (5) expression -> SQL DELIMITER .
+
+    $end            reduce using rule 5 (expression -> SQL DELIMITER .)
+
+
+state 7
+
+    (1) expression -> CREATE ESTIMATOR WORD . TYPE WORD DELIMITER
+    (2) expression -> CREATE ESTIMATOR WORD . TYPE WORD LOSS WORD DELIMITER
+    (3) expression -> CREATE ESTIMATOR WORD . TYPE WORD LOSS WORD LEARNING_RATE FLOAT DELIMITER
+    (4) expression -> CREATE ESTIMATOR WORD . TYPE WORD LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER
+
+    TYPE            shift and go to state 9
+
+
 state 8
 
-    (1) expression -> CREATE MODEL WORD TYPE WORD . REGULARIZER WORD DELIMITER
+    (6) expression -> CREATE TRAINING_PROFILE WORD . BATCH_SIZE INT EPOCH INT SHUFFLE BOOL
 
-    REGULARIZER     shift and go to state 9
+    BATCH_SIZE      shift and go to state 10
 
 
 state 9
 
-    (1) expression -> CREATE MODEL WORD TYPE WORD REGULARIZER . WORD DELIMITER
+    (1) expression -> CREATE ESTIMATOR WORD TYPE . WORD DELIMITER
+    (2) expression -> CREATE ESTIMATOR WORD TYPE . WORD LOSS WORD DELIMITER
+    (3) expression -> CREATE ESTIMATOR WORD TYPE . WORD LOSS WORD LEARNING_RATE FLOAT DELIMITER
+    (4) expression -> CREATE ESTIMATOR WORD TYPE . WORD LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER
 
-    WORD            shift and go to state 10
+    WORD            shift and go to state 11
 
 
 state 10
 
-    (1) expression -> CREATE MODEL WORD TYPE WORD REGULARIZER WORD . DELIMITER
+    (6) expression -> CREATE TRAINING_PROFILE WORD BATCH_SIZE . INT EPOCH INT SHUFFLE BOOL
 
-    DELIMITER       shift and go to state 11
+    INT             shift and go to state 12
 
 
 state 11
 
-    (1) expression -> CREATE MODEL WORD TYPE WORD REGULARIZER WORD DELIMITER .
+    (1) expression -> CREATE ESTIMATOR WORD TYPE WORD . DELIMITER
+    (2) expression -> CREATE ESTIMATOR WORD TYPE WORD . LOSS WORD DELIMITER
+    (3) expression -> CREATE ESTIMATOR WORD TYPE WORD . LOSS WORD LEARNING_RATE FLOAT DELIMITER
+    (4) expression -> CREATE ESTIMATOR WORD TYPE WORD . LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER
 
-    $end            reduce using rule 1 (expression -> CREATE MODEL WORD TYPE WORD REGULARIZER WORD DELIMITER .)
+    DELIMITER       shift and go to state 13
+    LOSS            shift and go to state 14
+
+
+state 12
+
+    (6) expression -> CREATE TRAINING_PROFILE WORD BATCH_SIZE INT . EPOCH INT SHUFFLE BOOL
+
+    EPOCH           shift and go to state 15
+
+
+state 13
+
+    (1) expression -> CREATE ESTIMATOR WORD TYPE WORD DELIMITER .
+
+    $end            reduce using rule 1 (expression -> CREATE ESTIMATOR WORD TYPE WORD DELIMITER .)
+
+
+state 14
+
+    (2) expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS . WORD DELIMITER
+    (3) expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS . WORD LEARNING_RATE FLOAT DELIMITER
+    (4) expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS . WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER
+
+    WORD            shift and go to state 16
+
+
+state 15
+
+    (6) expression -> CREATE TRAINING_PROFILE WORD BATCH_SIZE INT EPOCH . INT SHUFFLE BOOL
+
+    INT             shift and go to state 17
+
+
+state 16
+
+    (2) expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD . DELIMITER
+    (3) expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD . LEARNING_RATE FLOAT DELIMITER
+    (4) expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD . LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER
+
+    DELIMITER       shift and go to state 18
+    LEARNING_RATE   shift and go to state 19
+
+
+state 17
+
+    (6) expression -> CREATE TRAINING_PROFILE WORD BATCH_SIZE INT EPOCH INT . SHUFFLE BOOL
+
+    SHUFFLE         shift and go to state 20
+
+
+state 18
+
+    (2) expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD DELIMITER .
+
+    $end            reduce using rule 2 (expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD DELIMITER .)
+
+
+state 19
+
+    (3) expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE . FLOAT DELIMITER
+    (4) expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE . FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER
+
+    FLOAT           shift and go to state 21
+
+
+state 20
+
+    (6) expression -> CREATE TRAINING_PROFILE WORD BATCH_SIZE INT EPOCH INT SHUFFLE . BOOL
+
+    BOOL            shift and go to state 22
+
+
+state 21
+
+    (3) expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT . DELIMITER
+    (4) expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT . OPTIMIZER WORD REGULARIZER WORD DELIMITER
+
+    DELIMITER       shift and go to state 23
+    OPTIMIZER       shift and go to state 24
+
+
+state 22
+
+    (6) expression -> CREATE TRAINING_PROFILE WORD BATCH_SIZE INT EPOCH INT SHUFFLE BOOL .
+
+    $end            reduce using rule 6 (expression -> CREATE TRAINING_PROFILE WORD BATCH_SIZE INT EPOCH INT SHUFFLE BOOL .)
+
+
+state 23
+
+    (3) expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT DELIMITER .
+
+    $end            reduce using rule 3 (expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT DELIMITER .)
+
+
+state 24
+
+    (4) expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT OPTIMIZER . WORD REGULARIZER WORD DELIMITER
+
+    WORD            shift and go to state 25
+
+
+state 25
+
+    (4) expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD . REGULARIZER WORD DELIMITER
+
+    REGULARIZER     shift and go to state 26
+
+
+state 26
+
+    (4) expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER . WORD DELIMITER
+
+    WORD            shift and go to state 27
+
+
+state 27
+
+    (4) expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD . DELIMITER
+
+    DELIMITER       shift and go to state 28
+
+
+state 28
+
+    (4) expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER .
+
+    $end            reduce using rule 4 (expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER .)
 
