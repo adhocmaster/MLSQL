@@ -43,6 +43,7 @@ def t_newline(t):
 def t_TRAINING_PROFILE(t):
     r'TRAINING[_ \t\n]+PROFILE'
     t.type = 'TRAINING_PROFILE'
+    t.value = 'TRAINING_PROFILE'
     print("I am in t_TRAINING_PROFILE")
     return t
 
@@ -50,7 +51,15 @@ def t_TRAINING_PROFILE(t):
 def t_LEARNING_RATE(t):
     r'LEARNING[_ \t\n]+RATE'
     t.type = 'LEARNING_RATE'
+    t.value = 'LEARNING_RATE'
     print("I am in t_LEARNING_RATE")
+    return t
+
+def t_VALIDATION_SPLIT(t):
+    r'VALIDATION[_ \t\n]+SPLIT'
+    t.type = 'VALIDATION_SPLIT'
+    t.value = 'VALIDATION_SPLIT'
+    print("I am in t_VALIDATION_SPLIT")
     return t
 
     

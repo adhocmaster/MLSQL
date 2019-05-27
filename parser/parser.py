@@ -22,20 +22,52 @@ import dill
 from lexer import tokens
 from engine.ASTProcessor import ASTProcessor
 from data import Estimator
+from data.TrainingProfile import TrainingProfile
 
 ASTProcessor = ASTProcessor()
 ESTIMATOR, TRAIN, TRAINING_PROFILE = range(3)
 states = ['ESTIMATOR', 'TRAIN', 'TRAINING_PROFILE' ]
 currentState = None
+currentDb = None
+
+def p_training_profile(p):
+    '''exp : CREATE TRAINING_PROFILE WORD WITH SQL DELIMITER
+                | CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT DELIMITER
+                | CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT DELIMITER
+                | CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT SHUFFLE BOOL DELIMITER'''
+    global currentState
+    currentState = TRAINING_PROFILE
+    length = len(p)
+
+    name = p[3]
+    sql = p[5]
+    validationSplit = 0
+    batchSize = 0
+    epoch = 0
+    shuffle = False
+
+    if length > 7:
+        validationSplit = p[8]
+    if length > 10:
+        batchSize = p[10]
+        epoch = p[12]
+    if length > 14:
+        shuffle = p[14]
+    
+    try:
+        profile = ASTProcessor.createTrainingProfile(name=name, sql=sql, validationSplit=validationSplit, batchSize=batchSize, epoch=epoch, shuffle=shuffle)
+        print(f"Created training profile with name {name}")
+    except Exception as e:
+        printError(e)
+    pass
+
 def p_create_model(p):
-    '''expression : CREATE ESTIMATOR WORD TYPE WORD DELIMITER
+    '''exp : CREATE ESTIMATOR WORD TYPE WORD DELIMITER
                   | CREATE ESTIMATOR WORD TYPE WORD LOSS WORD DELIMITER
                   | CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT DELIMITER
                   | CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER'''
     global currentState
     currentState = ESTIMATOR
-    p[0] = "A create ESTIMATOR"
-    print( f" p[0] = {p[0]}" )
 
     length = len(p)
 
@@ -56,30 +88,46 @@ def p_create_model(p):
 
     try:
         estimator = ASTProcessor.createEstimator(name=name, estimatorType=estimatorType, loss=loss, lr=lr, optimizer=optimizer, regularizer=regularizer)
-        print(f"Created estimator with name {name} {estimator}")
+        print(f"Created estimator with name {name}")
     except Exception as e:
-        print(e)
+        printError(e)
+    
+    pass
 
 
+def p_use_database(p):
+    'exp : USE WORD DELIMITER'
+    global currentDb
+    currentDb = p[2]
 
+    if ASTProcessor.hasDB(currentDb):
+        print(f"selected {currentDb}")
+    else:
+        printError(f'{currentDb} does not exist in the database engine.')
+        currentDb = None
+    
+    pass
 
 def p_SQL(p):
-    'expression : SQL DELIMITER'
+    'exp : SQL DELIMITER'
     p[0] = p[1]
     print( f" p[0] = {p[0]}" )
 
-def p_training_profile(p):
-    '''expression : CREATE TRAINING_PROFILE WORD BATCH_SIZE INT EPOCH INT SHUFFLE BOOL'''
-    p[0] = "A training profile"
-    print( f" p[0] = {p[0]}" )
+    pass
+
 
 def p_error(t):
-    print('Syntax error at "%s"' % t.value if t else 'NULL')
+    printError('Syntax error at "%s"' % t.value if t else 'NULL')
     global current_state
     current_state = None
+    pass
+
+def printError(e):
+    print("Operation failed due to:")
+    print(e)
 
 # parser = yacc.yacc(debug=True, errorlog=log)
-parser = yacc.yacc()
+parser = yacc.yacc(debug=True)
 
 # with open("parser/parser.dill", "wb") as f:
 #     dill.dump(parser, f)
@@ -105,15 +153,20 @@ if __name__ == "__main__":
 
         if userInput == 'exit':
             break
+
+        if len(userInput) == 0:
+            continue
+
         
         if userInput[-1] != ';':
             prevInput += ' ' + userInput
             continue
         
+
         data = prevInput + userInput
         print(f"parsing {data}")
         p = parser.parse(data)
-        print(p)
+        # print(p)
 
         prevInput = ''
 

@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'ANDTRAINING_PROFILE BATCH_SIZE BOOL CREATE DELIMITER EPOCH ESTIMATOR FLOAT FORMULA FORMULA_OPERATOR INT LEARNING_RATE LOSS MODEL OPTIMIZER REGULARIZER SHUFFLE SQL TRAIN TRAINING_PROFILE TYPE WITH WORDexpression : CREATE ESTIMATOR WORD TYPE WORD DELIMITER\n                  | CREATE ESTIMATOR WORD TYPE WORD LOSS WORD DELIMITER\n                  | CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT DELIMITER\n                  | CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITERexpression : SQL DELIMITERexpression : CREATE TRAINING_PROFILE WORD BATCH_SIZE INT EPOCH INT SHUFFLE BOOL'
+_lr_signature = 'AND BATCH_SIZE BOOL CREATE DELIMITER EPOCH ESTIMATOR FLOAT FORMULA FORMULA_OPERATOR INT LEARNING_RATE LOSS MODEL OPTIMIZER REGULARIZER SHUFFLE SQL TRAIN TRAINING_PROFILE TYPE USE VALIDATION_SPLIT WITH WORDexp : CREATE TRAINING_PROFILE WORD WITH SQL DELIMITER\n                | CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT DELIMITER\n                | CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT DELIMITER\n                | CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT SHUFFLE BOOL DELIMITERexp : CREATE ESTIMATOR WORD TYPE WORD DELIMITER\n                  | CREATE ESTIMATOR WORD TYPE WORD LOSS WORD DELIMITER\n                  | CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT DELIMITER\n                  | CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITERexp : USE WORD DELIMITERexp : SQL DELIMITER'
     
-_lr_action_items = {'CREATE':([0,],[2,]),'SQL':([0,],[3,]),'$end':([1,6,13,18,22,23,28,],[0,-5,-1,-2,-6,-3,-4,]),'ESTIMATOR':([2,],[4,]),'TRAINING_PROFILE':([2,],[5,]),'DELIMITER':([3,11,16,21,27,],[6,13,18,23,28,]),'WORD':([4,5,9,14,24,26,],[7,8,11,16,25,27,]),'TYPE':([7,],[9,]),'BATCH_SIZE':([8,],[10,]),'INT':([10,15,],[12,17,]),'LOSS':([11,],[14,]),'EPOCH':([12,],[15,]),'LEARNING_RATE':([16,],[19,]),'SHUFFLE':([17,],[20,]),'FLOAT':([19,],[21,]),'BOOL':([20,],[22,]),'OPTIMIZER':([21,],[24,]),'REGULARIZER':([25,],[26,]),}
+_lr_action_items = {'CREATE':([0,],[2,]),'USE':([0,],[4,]),'SQL':([0,12,],[3,14,]),'$end':([1,7,11,16,18,23,25,29,35,39,40,],[0,-10,-9,-1,-5,-6,-2,-7,-3,-8,-4,]),'TRAINING_PROFILE':([2,],[5,]),'ESTIMATOR':([2,],[6,]),'DELIMITER':([3,8,14,15,21,22,27,33,37,38,],[7,11,16,18,23,25,29,35,39,40,]),'WORD':([4,5,6,13,19,30,34,],[8,9,10,15,21,32,37,]),'WITH':([9,],[12,]),'TYPE':([10,],[13,]),'AND':([14,],[17,]),'LOSS':([15,],[19,]),'VALIDATION_SPLIT':([17,],[20,]),'FLOAT':([20,24,],[22,27,]),'LEARNING_RATE':([21,],[24,]),'BATCH_SIZE':([22,],[26,]),'INT':([26,31,],[28,33,]),'OPTIMIZER':([27,],[30,]),'EPOCH':([28,],[31,]),'REGULARIZER':([32,],[34,]),'SHUFFLE':([33,],[36,]),'BOOL':([36,],[38,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'expression':([0,],[1,]),}
+_lr_goto_items = {'exp':([0,],[1,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,11 +26,15 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> expression","S'",1,None,None,None),
-  ('expression -> CREATE ESTIMATOR WORD TYPE WORD DELIMITER','expression',6,'p_create_model','parser.py',31),
-  ('expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD DELIMITER','expression',8,'p_create_model','parser.py',32),
-  ('expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT DELIMITER','expression',10,'p_create_model','parser.py',33),
-  ('expression -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER','expression',14,'p_create_model','parser.py',34),
-  ('expression -> SQL DELIMITER','expression',2,'p_SQL','parser.py',67),
-  ('expression -> CREATE TRAINING_PROFILE WORD BATCH_SIZE INT EPOCH INT SHUFFLE BOOL','expression',9,'p_training_profile','parser.py',72),
+  ("S' -> exp","S'",1,None,None,None),
+  ('exp -> CREATE TRAINING_PROFILE WORD WITH SQL DELIMITER','exp',6,'p_training_profile','parser.py',34),
+  ('exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT DELIMITER','exp',9,'p_training_profile','parser.py',35),
+  ('exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT DELIMITER','exp',13,'p_training_profile','parser.py',36),
+  ('exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT SHUFFLE BOOL DELIMITER','exp',15,'p_training_profile','parser.py',37),
+  ('exp -> CREATE ESTIMATOR WORD TYPE WORD DELIMITER','exp',6,'p_create_model','parser.py',65),
+  ('exp -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD DELIMITER','exp',8,'p_create_model','parser.py',66),
+  ('exp -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT DELIMITER','exp',10,'p_create_model','parser.py',67),
+  ('exp -> CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER','exp',14,'p_create_model','parser.py',68),
+  ('exp -> USE WORD DELIMITER','exp',3,'p_use_database','parser.py',99),
+  ('exp -> SQL DELIMITER','exp',2,'p_SQL','parser.py',112),
 ]

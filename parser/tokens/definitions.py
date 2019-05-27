@@ -13,12 +13,14 @@ modelTokens = [
 
 trainProfileTokens = [
     'CREATE',
-    'AND'
+    'AND',
     'TRAINING_PROFILE',
     'BATCH_SIZE',
     'EPOCH',
     'SHUFFLE',
-    'WITH'
+    'VALIDATION_SPLIT',
+    'WITH',
+    'USE'
 ]
 
     
