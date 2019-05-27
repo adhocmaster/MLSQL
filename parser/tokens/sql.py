@@ -1,3 +1,3 @@
 basicSQL = [
-    'SELECT'
+    'SQL'
 ]

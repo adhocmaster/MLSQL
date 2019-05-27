@@ -1,0 +1,17 @@
+   yacc.py:3363:f:/myProjects/tfKeras/UCSC/CMPS203/MLSQL/parser/parser.py:31: Symbol 'ESTIMATOR' used, but not defined as a token or a rule
+   yacc.py:3363:f:/myProjects/tfKeras/UCSC/CMPS203/MLSQL/parser/parser.py:32: Symbol 'ESTIMATOR' used, but not defined as a token or a rule
+   yacc.py:3363:f:/myProjects/tfKeras/UCSC/CMPS203/MLSQL/parser/parser.py:33: Symbol 'ESTIMATOR' used, but not defined as a token or a rule
+   yacc.py:3363:f:/myProjects/tfKeras/UCSC/CMPS203/MLSQL/parser/parser.py:33: Symbol 'LEARNING_RATE' used, but not defined as a token or a rule
+   yacc.py:3363:f:/myProjects/tfKeras/UCSC/CMPS203/MLSQL/parser/parser.py:34: Symbol 'ESTIMATOR' used, but not defined as a token or a rule
+   yacc.py:3363:f:/myProjects/tfKeras/UCSC/CMPS203/MLSQL/parser/parser.py:34: Symbol 'LEARNING_RATE' used, but not defined as a token or a rule
+   yacc.py:3363:f:/myProjects/tfKeras/UCSC/CMPS203/MLSQL/parser/parser.py:34: Symbol 'OPTIMIZER' used, but not defined as a token or a rule
+   yacc.py:3363:f:/myProjects/tfKeras/UCSC/CMPS203/MLSQL/parser/parser.py:34: Symbol 'REGULARIZER' used, but not defined as a token or a rule
+   yacc.py:3372:Token 'ANDTRAINING_PROFILE' defined, but not used
+   yacc.py:3372:Token 'ESTIMATORREGULARIZER' defined, but not used
+   yacc.py:3372:Token 'FORMULA' defined, but not used
+   yacc.py:3372:Token 'FORMULA_OPERATOR' defined, but not used
+   yacc.py:3372:Token 'LEARNING_RATEOPTIMIZER' defined, but not used
+   yacc.py:3372:Token 'MODEL' defined, but not used
+   yacc.py:3372:Token 'TRAIN' defined, but not used
+   yacc.py:3372:Token 'WITH' defined, but not used
+   yacc.py:3391:There are 8 unused tokens

@@ -5,7 +5,10 @@ modelTokens = [
     'REGULARIZER',
     'TYPE',
     'FORMULA',
-    'FORMULA_OPERATOR'
+    'FORMULA_OPERATOR',
+    'LOSS',
+    'LEARNING_RATE',
+    'OPTIMIZER'
 ]
 
 trainProfileTokens = [
@@ -14,20 +17,28 @@ trainProfileTokens = [
     'TRAINING_PROFILE',
     'BATCH_SIZE',
     'EPOCH',
-    'SUFFLE',
+    'SHUFFLE',
     'WITH'
 ]
 
+    
+"""
 def t_CREATE(t):
     r'CREATE'
     return t
 def t_MODEL(t):
-    r'MODEL'
+    r'MODEL|ESTIMATOR'
     return t
     
 def t_REGULARIZER(t):
     r'REGULARIZER'
     return t
+    
 def t_TYPE(t):
     r'TYPE'
     return t
+    
+def t_FORMULA(t):
+    r'TYPE'
+    return t
+"""
