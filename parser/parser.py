@@ -25,10 +25,55 @@ from data import Estimator
 from data.TrainingProfile import TrainingProfile
 
 ASTProcessor = ASTProcessor()
-ESTIMATOR, TRAIN, TRAINING_PROFILE = range(3)
-states = ['ESTIMATOR', 'TRAIN', 'TRAINING_PROFILE' ]
+ESTIMATOR, TRAIN, TRAINING_PROFILE, USE = range(3)
+states = ['ESTIMATOR', 'TRAIN', 'TRAINING_PROFILE', 'USE' ]
 currentState = None
 currentDb = None
+
+
+def p_create_model(p):
+    '''exp : CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP DELIMITER
+            | CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP LOSS WORD DELIMITER
+            | CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP LOSS WORD LEARNING_RATE FLOAT DELIMITER
+            | CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER'''
+    global currentState
+    currentState = ESTIMATOR
+
+    length = len(p)
+
+    name = p[3]
+    estimatorType = p[5]
+    loss = None
+    lr = 0.001
+    optimizer = None
+    regularizer = None
+
+    lastPos = 5
+    if length > 7:
+        lastPos += 2
+        formula = p[lastPos]
+
+    if length > lastPos + 1:
+        lastPos += 2
+        loss = p[lastPos]
+
+    if length > lastPos + 1:
+        lastPos += 2
+        lr = p[lastPos]
+
+    if length > lastPos + 1:
+        lastPos += 2
+        optimizer = p[lastPos]
+        lastPos += 2
+        regularizer = p[lastPos]
+
+    try:
+        estimator = ASTProcessor.createEstimator(name=name, estimatorType=estimatorType, loss=loss, lr=lr, optimizer=optimizer, regularizer=regularizer)
+        print(f"Created estimator with name {name}")
+    except Exception as e:
+        printError(e)
+    
+    pass
 
 def p_training_profile(p):
     '''exp : CREATE TRAINING_PROFILE WORD WITH SQL DELIMITER
@@ -61,49 +106,27 @@ def p_training_profile(p):
         printError(e)
     pass
 
-def p_create_model(p):
-    '''exp : CREATE ESTIMATOR WORD TYPE WORD DELIMITER
-                  | CREATE ESTIMATOR WORD TYPE WORD LOSS WORD DELIMITER
-                  | CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT DELIMITER
-                  | CREATE ESTIMATOR WORD TYPE WORD LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER'''
+
+def p_train(p):
+    '''exp : TRAIN WORD WITH TRAINING_PROFILE WORD'''
     global currentState
-    currentState = ESTIMATOR
+    currentState = TRAIN
 
-    length = len(p)
+    estimatorName = p[2]
+    trainingProfileName = p[5]
 
-    name = p[3]
-    estimatorType = p[5]
-    loss = None
-    lr = 0.001
-    optimizer = None
-    regularizer = None
-
-    if length > 7:
-        loss = p[7]
-    if length > 9:
-        lr = p[9]
-    if length >= 11:
-        optimizer = p[11]
-        regularizer = p[13]
-
-    try:
-        estimator = ASTProcessor.createEstimator(name=name, estimatorType=estimatorType, loss=loss, lr=lr, optimizer=optimizer, regularizer=regularizer)
-        print(f"Created estimator with name {name}")
-    except Exception as e:
-        printError(e)
-    
-    pass
 
 
 def p_use_database(p):
     'exp : USE WORD DELIMITER'
     global currentDb
-    currentDb = p[2]
+    currentDbURL = p[2]
 
-    if ASTProcessor.hasDB(currentDb):
-        print(f"selected {currentDb}")
+    if ASTProcessor.hasDB(currentDbURL):
+        print(f"selected {currentDbURL}")
+        currentDb = ASTProcessor.getDB(currentDbURL)
     else:
-        printError(f'{currentDb} does not exist in the database engine.')
+        printError(f'{currentDbURL} does not exist in the database engine.')
         currentDb = None
     
     pass

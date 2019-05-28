@@ -4,11 +4,33 @@ import datetime
 from data.Estimator import Estimator
 from data.TrainingProfile import TrainingProfile
 from engine.LR import LR
+import pprint
 
 class ASTProcessor:
 
     def __init__(self):
+
+        self.pp = pprint.PrettyPrinter(indent=3)
         pass
+
+    def hasDB(self, dbURL):
+        
+        estimatorDb = self.getDB(dbURL)
+        if estimatorDb.connect():
+            return True
+        return False
+    
+    def getDB(self, dbURL):
+        return SqliteDatabase(dbURL)
+    
+    def getEstimator(self, name):
+        with db:
+            return Estimator.select().where(Estimator.name == name).get()
+    
+    def getTrainingProfile(self, name):
+        with db:
+            return TrainingProfile.select().where(TrainingProfile.name == name).get()
+    
     
     def createEstimator(self, name, estimatorType, loss, lr = 0.001, optimizer = None, regularizer = None):
 
@@ -60,9 +82,21 @@ class ASTProcessor:
             return trainingProfile
     
 
-    def hasDB(self, dbURL):
-        
-        estimatorDb = SqliteDatabase(dbURL)
-        if estimatorDb.connect():
-            return True
-        return False
+    def train(self, currentDB, estimatorName, trainingProfileName):
+
+        try:
+            estimator = self.getEstimator(estimatorName)
+            trainingProfile = self.getTrainingProfile(trainingProfileName)
+
+            self.pp.pprint(estimator)
+            self.pp.pprint(trainingProfile)
+
+            if estimator.estimatorType == 'LR':
+                
+
+
+        except Estimator.DoesNotExist as e:
+            raise Exception(f"{estimatorName} estimator does not exist ({e}).")
+
+        except TrainingProfile.DoesNotExist as e:
+            raise Exception(f"{trainingProfileName} estimator does not exist ({e}.")

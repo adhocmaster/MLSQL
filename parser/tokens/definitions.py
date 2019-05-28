@@ -5,7 +5,7 @@ modelTokens = [
     'REGULARIZER',
     'TYPE',
     'FORMULA',
-    'FORMULA_OPERATOR',
+    'FORMULA_EXP',
     'LOSS',
     'LEARNING_RATE',
     'OPTIMIZER'
@@ -21,6 +21,10 @@ trainProfileTokens = [
     'VALIDATION_SPLIT',
     'WITH',
     'USE'
+]
+
+trainTokens = [
+    'TRAIN'
 ]
 
     
