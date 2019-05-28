@@ -32,10 +32,11 @@ class ASTProcessor:
             return TrainingProfile.select().where(TrainingProfile.name == name).get()
     
     
-    def createEstimator(self, name, estimatorType, loss, lr = 0.001, optimizer = None, regularizer = None):
+    def createEstimator(self, name, estimatorType, formula = None, loss = None, lr = 0.001, optimizer = None, regularizer = None):
 
         print(f"""name = {name}, 
                 estimatorType={estimatorType}, 
+                formula={formula}, 
                 loss={loss}, 
                 lr={lr}, 
                 optimizer={optimizer}, 
@@ -44,6 +45,7 @@ class ASTProcessor:
         with db:
             estimator = Estimator.create(name = name, 
                                         estimatorType=estimatorType, 
+                                        formula=formula, 
                                         loss=loss, 
                                         lr=lr, 
                                         optimizer=optimizer, 
@@ -92,6 +94,7 @@ class ASTProcessor:
             self.pp.pprint(trainingProfile)
 
             if estimator.estimatorType == 'LR':
+                pass
                 
 
 
@@ -100,3 +103,5 @@ class ASTProcessor:
 
         except TrainingProfile.DoesNotExist as e:
             raise Exception(f"{trainingProfileName} estimator does not exist ({e}.")
+    
+    

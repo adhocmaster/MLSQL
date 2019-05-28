@@ -25,7 +25,7 @@ from data import Estimator
 from data.TrainingProfile import TrainingProfile
 
 ASTProcessor = ASTProcessor()
-ESTIMATOR, TRAIN, TRAINING_PROFILE, USE = range(3)
+ESTIMATOR, TRAIN, TRAINING_PROFILE, USE = range(4)
 states = ['ESTIMATOR', 'TRAIN', 'TRAINING_PROFILE', 'USE' ]
 currentState = None
 currentDb = None
@@ -53,22 +53,28 @@ def p_create_model(p):
         lastPos += 2
         formula = p[lastPos]
 
-    if length > lastPos + 1:
+    if length > lastPos + 2:
         lastPos += 2
         loss = p[lastPos]
 
-    if length > lastPos + 1:
+    if length > lastPos + 2:
         lastPos += 2
         lr = p[lastPos]
 
-    if length > lastPos + 1:
+    if length > lastPos + 2:
         lastPos += 2
         optimizer = p[lastPos]
         lastPos += 2
         regularizer = p[lastPos]
 
     try:
-        estimator = ASTProcessor.createEstimator(name=name, estimatorType=estimatorType, loss=loss, lr=lr, optimizer=optimizer, regularizer=regularizer)
+        estimator = ASTProcessor.createEstimator(name=name, 
+                                                estimatorType=estimatorType, 
+                                                formula=formula, 
+                                                loss=loss, 
+                                                lr=lr, 
+                                                optimizer=optimizer, 
+                                                regularizer=regularizer)
         print(f"Created estimator with name {name}")
     except Exception as e:
         printError(e)
