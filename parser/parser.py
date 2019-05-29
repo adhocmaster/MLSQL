@@ -28,7 +28,7 @@ ASTProcessor = ASTProcessor()
 ESTIMATOR, TRAIN, TRAINING_PROFILE, USE = range(4)
 states = ['ESTIMATOR', 'TRAIN', 'TRAINING_PROFILE', 'USE' ]
 currentState = None
-currentDb = None
+currentDb = None #database connector instance, not url.
 
 
 def p_create_model(p):

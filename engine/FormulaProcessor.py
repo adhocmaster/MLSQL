@@ -1,4 +1,7 @@
 import re
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
 class FormulaProcessor:
 
     def __init__(self, formula):
@@ -28,4 +31,15 @@ class FormulaProcessor:
         return filtered
     
 
-    def getData(self, formula)
+    def getDataFromSQLDB(self, dataDb, trainingProfile, randomSeed = 42):
+        """returns (XTrain, XValidation, yValidation, yTrain) training and validation X,y, does not support categorical data yet"""
+
+        df = pd.read_sql("SELECT * FROM estimator", dataDb.connection())
+
+        X = df[self.fieldsX].values
+        y = df[self.fieldY].values
+        
+        if trainingProfile.validation_split <= 0:
+            return X, None, y, None
+
+        return train_test_split(X, y, test_size = trainingProfile.validation_split , random_state = randomSeed)
