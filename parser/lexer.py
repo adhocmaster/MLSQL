@@ -40,7 +40,7 @@ def t_FORMULA_EXP(t):
 reKyewords = "(" + "|".join(keywords) + ")+[ \n\t]{1}"
 @TOKEN(reKyewords)
 def t_KEYWORD(t):
-    print(f"found keyword: {t.value}")
+    # print(f"found keyword: {t.value}")
     t.value = t.value.strip()
     t.type = t.value
     return t
