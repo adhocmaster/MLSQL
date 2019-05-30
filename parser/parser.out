@@ -16,7 +16,7 @@ Rule 6     exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLO
 Rule 7     exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT DELIMITER
 Rule 8     exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT SHUFFLE BOOL DELIMITER
 Rule 9     exp -> TRAIN WORD WITH TRAINING_PROFILE WORD
-Rule 10    exp -> USE WORD DELIMITER
+Rule 10    exp -> USE URL DELIMITER
 Rule 11    exp -> SQL DELIMITER
 
 Terminals, with rules where they appear
@@ -42,10 +42,11 @@ SQL                  : 5 6 7 8 11
 TRAIN                : 9
 TRAINING_PROFILE     : 5 6 7 8 9
 TYPE                 : 1 2 3 4
+URL                  : 10
 USE                  : 10
 VALIDATION_SPLIT     : 6 7 8
 WITH                 : 5 6 7 8 9
-WORD                 : 1 1 2 2 2 3 3 3 4 4 4 4 4 5 6 7 8 9 9 10
+WORD                 : 1 1 2 2 2 3 3 3 4 4 4 4 4 5 6 7 8 9 9
 error                : 
 
 Nonterminals, with rules where they appear
@@ -66,7 +67,7 @@ state 0
     (7) exp -> . CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT DELIMITER
     (8) exp -> . CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT SHUFFLE BOOL DELIMITER
     (9) exp -> . TRAIN WORD WITH TRAINING_PROFILE WORD
-    (10) exp -> . USE WORD DELIMITER
+    (10) exp -> . USE URL DELIMITER
     (11) exp -> . SQL DELIMITER
 
     CREATE          shift and go to state 2
@@ -113,9 +114,9 @@ state 4
 
 state 5
 
-    (10) exp -> USE . WORD DELIMITER
+    (10) exp -> USE . URL DELIMITER
 
-    WORD            shift and go to state 10
+    URL             shift and go to state 10
 
 
 state 6
@@ -154,7 +155,7 @@ state 9
 
 state 10
 
-    (10) exp -> USE WORD . DELIMITER
+    (10) exp -> USE URL . DELIMITER
 
     DELIMITER       shift and go to state 14
 
@@ -188,9 +189,9 @@ state 13
 
 state 14
 
-    (10) exp -> USE WORD DELIMITER .
+    (10) exp -> USE URL DELIMITER .
 
-    $end            reduce using rule 10 (exp -> USE WORD DELIMITER .)
+    $end            reduce using rule 10 (exp -> USE URL DELIMITER .)
 
 
 state 15
