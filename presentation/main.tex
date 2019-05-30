@@ -258,7 +258,7 @@
    \\
   }
   \texttt{CREATE ESTIMATOR \textcolor{blue}{salaryPred} \\ TYPE \textcolor{Gray}{LR} FORMULA
-  \textcolor{Gray}{\$salary$\sim$years$\sim$...\$} }
+  \textcolor{Gray}{\$salary$\sim$years$\sim$...\$}; }
   \begin{itemize}
       \item attributes in \texttt{FORMULA} must be names of columns in tables of the dataset that will be used.
   \end{itemize}
@@ -273,14 +273,13 @@
   \item<3->{
   \textbf{Select the database}
   \\
-  \texttt{USE \textcolor{Gray}{'data/salarydb.db';}}
+  \texttt{USE \textcolor{Gray}{'data/salarydb.db'};}
   }  
   \vspace{.1in}
   \item<4->{
  \textbf{ Training an estimator with a training profile}
   \\
-  \textt{
-  TRAIN \textcolor{blue}{salaryPred} WITH TRAINING PROFILE \textcolor{red}{salaryProfile};
+  \texttt{TRAIN \textcolor{blue}{salaryPred} WITH TRAINING PROFILE \textcolor{red}{salaryProfile};
   }
   
   }
@@ -363,7 +362,7 @@
     \begin{itemize}
         \item<1-> Recent progress -- Tensor Flow API for javascript users
         \item<2-> We are providing ML to SQL users
-        \item<3-> Next... \cancelto{\textcolor{red}{ALL}}{\text{ ML for HTML and \LaTeX users !!} }
+        \item<3-> Next... $\cancelto{\textcolor{red}{ALL}}{\text{ ML for HTML and \LaTeX users !!} }$
     \end{itemize}
     \vspace{.2in}
    \item SQLite3 and Pewee ORM
