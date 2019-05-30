@@ -11,10 +11,10 @@
 % notice. 
 
 %Use this to print without animation
-%\documentclass[handout, xcolor={dvipsnames}]{beamer}
+\documentclass[handout, xcolor={dvipsnames}]{beamer}
 
 %Use this to print WITH animation
-\documentclass[xcolor={dvipsnames}]{beamer}
+%\documentclass[xcolor={dvipsnames}]{beamer}
 
 % There are many different themes available for Beamer. A comprehensive
 % list with examples is given here:
@@ -48,7 +48,7 @@
 %\usetheme{Singapore}
 %\usetheme{Szeged}
 %\usetheme{Warsaw}
-
+\usepackage{cancel}
 \usepackage{amsmath,amsthm,verbatim,amssymb,amsfonts,amscd, graphicx, amsmath}
 \usepackage{soul} %for line through a text
 \usepackage{graphics}
@@ -153,7 +153,7 @@
 \begin{frame}{Motivation}{}
   \begin{itemize}
   \item<1-> {
-   Logos
+   Objective
    \begin{itemize}
        \item<1->  A vast amount of data around us these days (the usual Big Data spiel!)
        \vspace{.2in}
@@ -161,7 +161,7 @@
         \begin{itemize}
             \item<3-> Everyone is excited about it 
             \item<4-> Everyone is talking about it
-            \item<5-> No one is really doing it!
+            \item<5-> No one (very few) is really doing it!
         \end{itemize}
         \vspace{.2in}
        \item<6-> Popularity of SQL - extremely commonplace
@@ -181,7 +181,7 @@
 \begin{frame}{Motivation}{}
   \begin{itemize}
   \item<1-> {
-   Pathos
+   Subjective
    \begin{itemize}
        \item<1->  Python - extremely popular, host of libraries
        \vspace{.2in}
@@ -208,24 +208,23 @@
 \begin{frame}{Motivation}{}
   \begin{itemize}
   \item<1-> {
-   Ethos
+   What we found helpful?
    \begin{itemize}
-       \item<1->  Relation DB model long tested and still popular
+       \item<1->  Theoretical foundation of Relation DB model -- long tested and still popular
        \vspace{.2in}
        \item<2-> Experience with 
         \begin{itemize}
+            
             \item<3-> Tenserflow 
             \item<4-> Scikit Learn
             \item<5-> SQL and no SQL databases
+            \item<6-> Pytorch
+            \item<7-> Theano
+            \item<8-> Data Analysis
+            \item<9-> Machine Learning
         \end{itemize}
         \vspace{.2in}
-       \item<6-> Popularity of SQL - extremely commonplace
-       \begin{figure}
-           \centering
-           \includegraphics[scale = 0.1]{SQL_use.png}
-           \caption{SQLite usage in the industry - https://www.sqlite.org/famous.html}
-           \label{fig:sql_industry}
-       \end{figure}
+       \item<10-> Distributed Systems
    \end{itemize}
   }
 
@@ -251,6 +250,84 @@
   \end{figure}
 \end{frame}
 
+\section{Syntax}
+\begin{frame}{Example}{Linear Regression}
+  \begin{itemize}
+  \item<1-> {
+   \textbf{Create a model}
+   \\
+  }
+  \texttt{CREATE ESTIMATOR \textcolor{blue}{salaryPred} \\ TYPE \textcolor{Gray}{LR} FORMULA
+  \textcolor{Gray}{\$salary$\sim$years$\sim$...\$} }
+  \begin{itemize}
+      \item attributes in \texttt{FORMULA} must be names of columns in tables of the dataset that will be used.
+  \end{itemize}
+  \vspace{.1in}
+  \item<2->{
+  \textbf{Create a training profile}
+  \\
+  \texttt{CREATE TRAINING PROFILE \textcolor{red}{salaryProfile} \\ 
+  WITH [ SELECT \textcolor{Gray}{*} FROM \textcolor{brown}{salary}];}
+  }
+  \vspace{.1in}
+  \item<3->{
+  \textbf{Select the database}
+  \\
+  \texttt{USE \textcolor{Gray}{'data/salarydb.db';}}
+  }  
+  \vspace{.1in}
+  \item<4->{
+ \textbf{ Training an estimator with a training profile}
+  \\
+  \textt{
+  TRAIN \textcolor{blue}{salaryPred} WITH TRAINING PROFILE \textcolor{red}{salaryProfile};
+  }
+  
+  }
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Syntax}{"Grammar Rule"}
+  \begin{itemize}
+  \item<1-> {Estimator
+     \begin{figure}
+         \centering
+         \includegraphics[scale = 0.25]{EstimatorTree.png}
+         \caption{Estimator Attributes}
+         \label{fig:Est_tree}
+     \end{figure}
+  }
+  \item<2->{Training Profile
+       \begin{figure}
+         \centering
+         \includegraphics[scale = 0.25]{TrainProfile_Tree.png}
+         \caption{Training Profile Attributes}
+         \label{fig:Est_tree}
+     \end{figure}
+  
+  }
+     
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{So what's happening?}
+\begin{figure}
+    \centering
+    \includegraphics[scale = 0.35]{System_diag.png}
+    \caption{MLSQL - Overview}
+    \label{fig:system_overview}
+\end{figure}
+\begin{itemize}
+    \item Create model. Store meta-information in database $M$ and the actual model to disk.
+    \item Create training profile. Store profile in database $P$.
+    \item Use a model from $M$ with profile from $P$ on a dataset of the client's choice.
+\end{itemize}
+    
+\end{frame}
+%%%%%%
+
+\section{Design Choices}
+
 \begin{frame}{A Specific Design Choice}{Where to place the model/estimator?}
   \begin{itemize}
       \item<1-> Two alternatives
@@ -264,29 +341,91 @@
           \item<4-> Place it \textcolor{blue}{outside} the database
           \begin{itemize}
               \item<5-> Better reusability
+              \item<6-> Use the same model on different datasets/databases
+              \item<7-> Share the same model
+              \item<8-> Replicate model for production
           \end{itemize}
       \end{itemize}
       \vspace{.2in}
-      \item<6-> We place it \textcolor{blue}{outside} the database
+      \item<9-> We place it \textcolor{blue}{outside} the database
       \begin{itemize}
-          \item<7-> We foresee a setting in which MLSQL is used to create a model and used with different data-sets.
-          \item<8-> Trade \textcolor{red}{portability} for \textcolor{ForestGreen}{versatility}
+          \item<10-> We foresee a setting in which MLSQL is used to create a model and used with different data-sets.
+          \item<11-> Trade \textcolor{red}{portability} for \textcolor{ForestGreen}{reusability}
+          \item<12-> \textit{Training Profile can be created by a domain expert. But the dataset can be changed by someone who is not.}
       \end{itemize}
+  \end{itemize}
+  
+  
+\end{frame}
+\begin{frame}{Other Design Choices}{}
+  \begin{itemize}
+   \item Why SQL?
+    \begin{itemize}
+        \item<1-> Recent progress -- Tensor Flow API for javascript users
+        \item<2-> We are providing ML to SQL users
+        \item<3-> Next... \cancelto{\textcolor{red}{ALL}}{\text{ ML for HTML and \LaTeX users !!} }
+    \end{itemize}
+    \vspace{.2in}
+   \item SQLite3 and Pewee ORM
+   \begin{itemize}
+       \item "virtual object database" that can be used from within the programming language
+   \end{itemize}
   \end{itemize}
 \end{frame}
 %%%
+
 \section{Novelty}
-\begin{frame}{Is this idea completely new?}{Related ideas}
+\begin{frame}{Is this idea completely new?}{Novelty}
   \begin{itemize}
   \item<1-> {
-   Surely not! We list a few related tools/products 
+   Surely not! However, ours is pretty dope
+   \begin{itemize}
+       \color{ForestGreen}
+       \item opensource
+       \item No "new" language
+       \item Abstracts using ML into two steps
+        \begin{itemize}
+        \color{blue}
+            \item Model Engineering (for trained experts)
+            \item Model Implementation (for everyone)
+        \end{itemize}
+       \item Try to minimise "shoot-in-the-dark" trend of machine learning.
+   \end{itemize} 
+  }
+  \vspace{.2in}
+  \item<2->{
+  Here are some tools that inspired us...
   }
       \begin{itemize}
-          \item<2-> Uber's \textcolor{blue}{Queryparser} \cite{QueryParser}
-          \item<3->  Google's \textcolor{blue}{BigQuery} \cite{BigQuery}
-          \item<4-> Microsoft's \textcolor{blue}{SQL Server 2017} \cite{SQLserver}
+          \item<3-> Uber's \textcolor{red}{Queryparser} \cite{QueryParser} 
+          \begin{itemize}
+              \item<3-> no ML but helped us conceive the design of our parser
+          \end{itemize}
+          
+          \vspace{.2in}
+          
+          \item<4-> Google's \textcolor{red}{BigQuery} \cite{BigQuery} used in conjunction with MapReduce
+          \begin{itemize}
+          \item<4-> serverless service
+          \item<4-> complicated code
+          \item<4-> expensive
+          \end{itemize}
+          
       \end{itemize}
   \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Novelty}{Continued...}
+    \begin{itemize}
+        \item<1-> Microsoft's \textcolor{red}{SQL Server 2017} \cite{SQLserver}
+          \begin{itemize}
+              \item<1-> separate core language which is quite different from other DB applications
+              \item<1-> expensive
+              \item<1-> companies that want to upgrade need to teach current employees how to work with the application
+              \item<1-> .NET framework dependent 
+          \end{itemize}
+    \end{itemize}
 \end{frame}
 %%%
 
