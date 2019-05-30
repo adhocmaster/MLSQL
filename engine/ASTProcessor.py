@@ -1,9 +1,10 @@
 from peewee import *
 from data.db import db
 import datetime
-from data.Estimator import Estimator
+from data.EstimatorMeta import EstimatorMeta
 from data.TrainingProfile import TrainingProfile
-from engine.LR import LR
+from engine.LRManager import LRManager
+from engine.FormulaProcessor import FormulaProcessor
 import pprint
 
 class ASTProcessor:
@@ -13,19 +14,23 @@ class ASTProcessor:
         self.pp = pprint.PrettyPrinter(indent=3)
         pass
 
-    def hasDB(self, dbURL):
+    def hasDB(self, dbURL,dbEngine='sqlite3'):
         
-        estimatorDb = self.getDB(dbURL)
-        if estimatorDb.connect():
-            return True
+        if dbEngine == 'sqlite3':
+            try:
+                open(dbURL, 'r')
+                return True
+            except FileNotFoundError:
+                return False
+        
         return False
     
     def getDB(self, dbURL):
         return SqliteDatabase(dbURL)
     
-    def getEstimator(self, name):
+    def getEstimatorMeta(self, name):
         with db:
-            return Estimator.select().where(Estimator.name == name).get()
+            return EstimatorMeta.select().where(EstimatorMeta.name == name).get()
     
     def getTrainingProfile(self, name):
         with db:
@@ -43,24 +48,25 @@ class ASTProcessor:
                 regularizer={regularizer}
                 """)
         with db:
-            estimator = Estimator.create(name = name, 
+            estimatorMeta = EstimatorMeta.create(name = name, 
                                         estimatorType=estimatorType, 
                                         formula=formula, 
                                         loss=loss, 
                                         lr=lr, 
                                         optimizer=optimizer, 
                                         regularizer=regularizer)
-
+            
             if estimatorType == "LR":
-                LR().create(name)
+                LRManager().create(name)
             
             else:
-                estimator.delete()
+                estimatorMeta.delete()
                 raise Exception(f"unrecognized estimator type{estimatorType}")
 
-            estimator.isAvailable = True
-            estimator.save()
-            return estimator
+            estimatorMeta.isAvailable = True
+            estimatorMeta.trainable = True
+            estimatorMeta.save()
+            return estimatorMeta
 
     
     def createTrainingProfile(self, name, sql, validationSplit, batchSize, epoch, shuffle):
@@ -87,21 +93,43 @@ class ASTProcessor:
     def train(self, currentDB, estimatorName, trainingProfileName):
 
         try:
-            estimator = self.getEstimator(estimatorName)
+            if currentDB is None:
+                raise Exception(f"no Database chosen to draw training data from. hint: [USE DBUrl;]")
+            estimatorMeta = self.getEstimatorMeta(estimatorName)
+            if estimatorMeta.trainable == False:
+                raise Exception(f"Estimator {estimatorMeta.name} is not trainable. Try cloning?")
+
+
             trainingProfile = self.getTrainingProfile(trainingProfileName)
 
-            self.pp.pprint(estimator)
+            self.pp.pprint(estimatorMeta)
             self.pp.pprint(trainingProfile)
 
-            if estimator.estimatorType == 'LR':
-                pass
-                
+            formulaProcessor = FormulaProcessor(estimatorMeta.formula)
 
+            XTrain, XValidation, yTrain, yValidation = formulaProcessor.getDataFromSQLDB(currentDB, trainingProfile)
 
-        except Estimator.DoesNotExist as e:
+            self.pp.pprint("Running training with following configurations.")
+            self.pp.pprint(estimatorMeta)
+            self.pp.pprint(trainingProfile)
+
+            if estimatorMeta.estimatorType == 'LR':
+                estimatorManager = LRManager()
+                accuracyDic = estimatorManager.trainValidate(estimatorName, XTrain, XValidation, yTrain, yValidation)
+                self.postTrain(estimatorMeta)
+                self.pp.pprint(accuracyDic)
+                return accuracyDic
+                       
+        except EstimatorMeta.DoesNotExist as e:
             raise Exception(f"{estimatorName} estimator does not exist ({e}).")
 
         except TrainingProfile.DoesNotExist as e:
             raise Exception(f"{trainingProfileName} estimator does not exist ({e}.")
+    
+    def postTrain(self, estimatorMeta):
+        estimatorMeta.trainable = False
+        estimatorMeta.save()
+
+
     
     

@@ -3,11 +3,12 @@ dataTypeTokens = [
     'FLOAT',
     'INT',
     'DELIMITER',
-    'BOOL'
+    'BOOL',
+    'URL'
 ]
 
 #regular expressions
-
+t_URL = r'[a-z0-9A-Z\.\/\:\%\+\-\_\&\@ ]+'
 t_BOOL = r'true|false'
 t_WORD = r'[a-zA-Z_][a-zA-Z_0-9]*'
 t_FLOAT = r'[0-9]+\.[0-9]*|[0-9]*\.[0-9]+'
