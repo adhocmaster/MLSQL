@@ -34,7 +34,7 @@ class FormulaProcessor:
     def getDataFromSQLDB(self, dataDb, trainingProfile, randomSeed = 42):
         """returns (XTrain, XValidation, yTrain, yValidation) training and validation X,y, does not support categorical data yet"""
 
-        df = pd.read_sql("SELECT * FROM estimator", dataDb.connection())
+        df = pd.read_sql(trainingProfile.source, dataDb.connection())
 
         X = df[self.fieldsX].values
         y = df[self.fieldY].values

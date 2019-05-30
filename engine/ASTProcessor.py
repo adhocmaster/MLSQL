@@ -14,7 +14,7 @@ class ASTProcessor:
         self.pp = pprint.PrettyPrinter(indent=3)
         pass
 
-    def hasDB(self, dbURL,dbEngine='sqlite3'):
+    def hasDB(self, dbURL, dbEngine='sqlite3'):
         
         if dbEngine == 'sqlite3':
             try:
