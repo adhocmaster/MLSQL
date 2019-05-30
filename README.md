@@ -38,3 +38,7 @@ Example: TRAIN **salaryPredictor** WITH TRAINING PROFILE **oneshotSalary**;
 
 # Available ML tools:
 1. Linear Regresstion (LR)
+
+# Flowcharts
+![Creating a Training Profile](https://raw.githubusercontent.com/adhocmaster/MLSQL/vishal/presentation/SQL_train.png)
+
