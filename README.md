@@ -40,5 +40,6 @@ Example: TRAIN **salaryPredictor** WITH TRAINING PROFILE **oneshotSalary**;
 1. Linear Regresstion (LR)
 
 # Flowcharts
+![Initial Control Flow](https://raw.githubusercontent.com/adhocmaster/MLSQL/vishal/presentation/flow_chart_broad.png)
 ![Creating a Training Profile](https://raw.githubusercontent.com/adhocmaster/MLSQL/vishal/presentation/SQL_train.png)
 
