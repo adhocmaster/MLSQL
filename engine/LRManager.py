@@ -1,5 +1,5 @@
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import median_absolute_error
 import dill
 from engine.EstimatorManager import EstimatorManager
 
@@ -16,20 +16,23 @@ class LRManager(EstimatorManager):
     def trainValidate(self, name, Xtrain, Xtest, yTrain, yTest):
 
         dic = {}
-        self.train(name, Xtrain, Xtest)
-        dic['training_accuracy'] = accuracy_score(yTrain, self.predict(name, Xtrain))
+        self.train(name, Xtrain, yTrain)
+        dic['training_mae'] = median_absolute_error(yTrain, self.predict(name, Xtrain))
         if Xtest is not None:
-            dic['validation_accuracy'] = accuracy_score(yTest, self.predict(name, Xtest))
+            dic['validation_mae'] = median_absolute_error(yTest, self.predict(name, Xtest))
         return dic
         
 
     def train(self, name, X, y):
                 
-        estimator = self.load(name).fit(X, y)
+        estimator = self.load(name)
+        estimator.fit(X, y)
         return self.save(name, estimator)
 
     
     def predict(self, name, X):
-        return self.load(name).predict(X)
+        estimator = self.load(name)
+        pred =  estimator.predict(X)
+        return pred
 
     

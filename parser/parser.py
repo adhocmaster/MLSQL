@@ -115,7 +115,8 @@ def p_training_profile(p):
 
 
 def p_train(p):
-    '''exp : TRAIN WORD WITH TRAINING_PROFILE WORD'''
+    '''exp : TRAIN WORD WITH WORD DELIMITER
+           | TRAIN WORD WITH TRAINING_PROFILE WORD DELIMITER'''
     printMatchedRule('p_train')
     global currentState
     currentState = TRAIN

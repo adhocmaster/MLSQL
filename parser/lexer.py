@@ -26,6 +26,11 @@ def t_SQL(t):
     t.value = t.value[1:len(t.value)-1].strip()
     return t
 
+def t_URL(t):
+    r'\'[a-z0-9A-Z\.\/\:\%\+\-\_\&\@ ]+\''
+    t.value = t.value[1:len(t.value)-1].strip()
+    return t
+
 def t_FORMULA_EXP(t):
     r'\$[a-zA-Z_0-9]+\~[a-zA-Z_0-9\+\-]+\$'
     t.value = t.value[1:len(t.value)-1].strip()

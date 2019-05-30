@@ -9,4 +9,4 @@ CREATE TRAINING_PROFILE oneshotSalary WITH [SELECT * FROM salary] AND VALIDATION
 TRAIN salaryPredictor WITH TRAINING_PROFILE oneshotSalary;
 TRAIN salaryPredictor WITH TRAINING PROFILE oneshotSalary;
 
-USE data/salary.db;
+USE 'data/salarydb.db';
