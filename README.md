@@ -4,6 +4,14 @@ License: BSD 3
 
 # Overall System Architecture
 
+# Dependency requirements: (will be packaged together in future)
+1. Tensorflow 1.2+
+2. Python 3.6
+3. Python Ply package
+4. sci-kit learn package
+5. Pandas package
+6. Dill package
+
 # Using the parser:
 1. Navigate to root folder 
 2. run "parser/parser.py" as a python application (You need to execute it from the root folder.)
