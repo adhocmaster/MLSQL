@@ -15,3 +15,5 @@ CLONE ESTIMATOR salaryPredictor AS clonedSalaryPredictor;
 TRAIN clonedSalaryPredictor WITH oneshotSalary;
 
 PREDICT WITH TRAINING PROFILE oneshotSalary BY ESTIMATOR salaryPredictor;
+
+PREDICT WITH [SELECT * FROM salary] BY ESTIMATOR salaryPredictor;
