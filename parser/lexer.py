@@ -10,7 +10,8 @@ from tokens.data_types import *
 keywords = list(set().union(
             modelTokens,
             trainTokens,
-            trainProfileTokens
+            trainProfileTokens,
+            utilityTokens
             ))
 tokens =  list(set().union(
 
@@ -19,8 +20,18 @@ tokens =  list(set().union(
 
             )) + keywords
 
-print(tokens)
+# print(tokens)
 
+def t_BOOL(t):
+    r'true|false'
+    if t.value == 'true':
+        t.value = True
+    else:
+        t.value = False
+    
+    return t
+
+    
 def t_SQL(t):
     r'\[\s*[SELECT,UPDATE]+[^\];]*\]'
     t.value = t.value[1:len(t.value)-1].strip()

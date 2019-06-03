@@ -3,3 +3,8 @@ trainTokens = [
     'WITH',
     'TRAINING_PROFILE'
 ]
+
+utilityTokens = [
+    'SET',
+    'DEBUG'
+]

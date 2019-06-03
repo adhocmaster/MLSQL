@@ -23,13 +23,22 @@ import dill
 from lexer import tokens
 from engine.ASTProcessor import ASTProcessor
 
+#******Environment Setup******
+
 ASTProcessor = ASTProcessor()
 ESTIMATOR, TRAIN, TRAINING_PROFILE, USE = range(4)
 states = ['ESTIMATOR', 'TRAIN', 'TRAINING_PROFILE', 'USE' ]
 currentState = None
 currentDB = None #database connector instance, not url.
 
+DEBUG = False
+def setDebug(debug = False):
+    global DEBUG
+    DEBUG = debug
 
+#******Environment Setup Ends******
+
+#***********Grammar******************
 def p_create_model(p):
     '''exp : CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP DELIMITER
             | CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP LOSS WORD DELIMITER
@@ -161,6 +170,20 @@ def p_SQL(p):
 
     pass
 
+def p_DEBUG(p):
+    'exp : SET DEBUG BOOL DELIMITER'
+    printMatchedRule('p_DEBUG')
+    global DEBUG
+    DEBUG = p[3]
+    # if p[3] == 'true':
+    #     DEBUG = True
+    # else:
+    #     DEBUG = False
+    
+    print(f"Debug set to {p[3]}")
+
+    pass
+
 
 def p_error(t):
     printError('Syntax error at "%s"' % t.value if t else 'NULL')
@@ -169,15 +192,20 @@ def p_error(t):
     pass
 
 def printError(e):
+    global DEBUG
     print("Operation failed due to:")
     print(e)
-    print("strack trace:")
-    for line in traceback.format_stack():
-        print(line.strip())
+
+    if DEBUG:
+        print("strack trace:")
+        for line in traceback.format_stack():
+            print(line.strip())
 
 def printMatchedRule(rule):
-    print(f"Matched Grammar Rule: {rule}")
+    if DEBUG:
+        print(f"Matched Grammar Rule: {rule}")
 
+#***********Grammar Ends******************
 # parser = yacc.yacc(debug=True, errorlog=log)
 parser = yacc.yacc(debug=True)
 
@@ -189,7 +217,9 @@ if __name__ == "__main__":
 
     userInput  = ''
     prevInput = ''
+    print(f'''\n********* Welcome to MLSQL (version egg)*********\n The first open-source SQL for Machine Learning.''')
     while True:
+        print('MLSQL>', end=" ")
         userInput = input().strip()
 
         if userInput == 'exit':

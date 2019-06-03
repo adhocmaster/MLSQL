@@ -19,14 +19,16 @@ Rule 9     exp -> TRAIN WORD WITH WORD DELIMITER
 Rule 10    exp -> TRAIN WORD WITH TRAINING_PROFILE WORD DELIMITER
 Rule 11    exp -> USE URL DELIMITER
 Rule 12    exp -> SQL DELIMITER
+Rule 13    exp -> SET DEBUG BOOL DELIMITER
 
 Terminals, with rules where they appear
 
 AND                  : 6 7 8
 BATCH_SIZE           : 7 8
-BOOL                 : 8
+BOOL                 : 8 13
 CREATE               : 1 2 3 4 5 6 7 8
-DELIMITER            : 1 2 3 4 5 6 7 8 9 10 11 12
+DEBUG                : 13
+DELIMITER            : 1 2 3 4 5 6 7 8 9 10 11 12 13
 EPOCH                : 7 8
 ESTIMATOR            : 1 2 3 4
 FLOAT                : 3 4 6 7 8
@@ -38,6 +40,7 @@ LOSS                 : 2 3 4
 MODEL                : 
 OPTIMIZER            : 4
 REGULARIZER          : 4
+SET                  : 13
 SHUFFLE              : 8
 SQL                  : 5 6 7 8 12
 TRAIN                : 9 10
@@ -71,11 +74,13 @@ state 0
     (10) exp -> . TRAIN WORD WITH TRAINING_PROFILE WORD DELIMITER
     (11) exp -> . USE URL DELIMITER
     (12) exp -> . SQL DELIMITER
+    (13) exp -> . SET DEBUG BOOL DELIMITER
 
     CREATE          shift and go to state 2
     TRAIN           shift and go to state 4
     USE             shift and go to state 5
     SQL             shift and go to state 3
+    SET             shift and go to state 6
 
     exp                            shift and go to state 1
 
@@ -96,15 +101,15 @@ state 2
     (7) exp -> CREATE . TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT DELIMITER
     (8) exp -> CREATE . TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT SHUFFLE BOOL DELIMITER
 
-    ESTIMATOR       shift and go to state 6
-    TRAINING_PROFILE shift and go to state 7
+    ESTIMATOR       shift and go to state 7
+    TRAINING_PROFILE shift and go to state 8
 
 
 state 3
 
     (12) exp -> SQL . DELIMITER
 
-    DELIMITER       shift and go to state 8
+    DELIMITER       shift and go to state 9
 
 
 state 4
@@ -112,380 +117,408 @@ state 4
     (9) exp -> TRAIN . WORD WITH WORD DELIMITER
     (10) exp -> TRAIN . WORD WITH TRAINING_PROFILE WORD DELIMITER
 
-    WORD            shift and go to state 9
+    WORD            shift and go to state 10
 
 
 state 5
 
     (11) exp -> USE . URL DELIMITER
 
-    URL             shift and go to state 10
+    URL             shift and go to state 11
 
 
 state 6
+
+    (13) exp -> SET . DEBUG BOOL DELIMITER
+
+    DEBUG           shift and go to state 12
+
+
+state 7
 
     (1) exp -> CREATE ESTIMATOR . WORD TYPE WORD FORMULA FORMULA_EXP DELIMITER
     (2) exp -> CREATE ESTIMATOR . WORD TYPE WORD FORMULA FORMULA_EXP LOSS WORD DELIMITER
     (3) exp -> CREATE ESTIMATOR . WORD TYPE WORD FORMULA FORMULA_EXP LOSS WORD LEARNING_RATE FLOAT DELIMITER
     (4) exp -> CREATE ESTIMATOR . WORD TYPE WORD FORMULA FORMULA_EXP LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER
 
-    WORD            shift and go to state 11
+    WORD            shift and go to state 13
 
 
-state 7
+state 8
 
     (5) exp -> CREATE TRAINING_PROFILE . WORD WITH SQL DELIMITER
     (6) exp -> CREATE TRAINING_PROFILE . WORD WITH SQL AND VALIDATION_SPLIT FLOAT DELIMITER
     (7) exp -> CREATE TRAINING_PROFILE . WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT DELIMITER
     (8) exp -> CREATE TRAINING_PROFILE . WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT SHUFFLE BOOL DELIMITER
 
-    WORD            shift and go to state 12
+    WORD            shift and go to state 14
 
 
-state 8
+state 9
 
     (12) exp -> SQL DELIMITER .
 
     $end            reduce using rule 12 (exp -> SQL DELIMITER .)
 
 
-state 9
+state 10
 
     (9) exp -> TRAIN WORD . WITH WORD DELIMITER
     (10) exp -> TRAIN WORD . WITH TRAINING_PROFILE WORD DELIMITER
 
-    WITH            shift and go to state 13
-
-
-state 10
-
-    (11) exp -> USE URL . DELIMITER
-
-    DELIMITER       shift and go to state 14
+    WITH            shift and go to state 15
 
 
 state 11
+
+    (11) exp -> USE URL . DELIMITER
+
+    DELIMITER       shift and go to state 16
+
+
+state 12
+
+    (13) exp -> SET DEBUG . BOOL DELIMITER
+
+    BOOL            shift and go to state 17
+
+
+state 13
 
     (1) exp -> CREATE ESTIMATOR WORD . TYPE WORD FORMULA FORMULA_EXP DELIMITER
     (2) exp -> CREATE ESTIMATOR WORD . TYPE WORD FORMULA FORMULA_EXP LOSS WORD DELIMITER
     (3) exp -> CREATE ESTIMATOR WORD . TYPE WORD FORMULA FORMULA_EXP LOSS WORD LEARNING_RATE FLOAT DELIMITER
     (4) exp -> CREATE ESTIMATOR WORD . TYPE WORD FORMULA FORMULA_EXP LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER
 
-    TYPE            shift and go to state 15
+    TYPE            shift and go to state 18
 
 
-state 12
+state 14
 
     (5) exp -> CREATE TRAINING_PROFILE WORD . WITH SQL DELIMITER
     (6) exp -> CREATE TRAINING_PROFILE WORD . WITH SQL AND VALIDATION_SPLIT FLOAT DELIMITER
     (7) exp -> CREATE TRAINING_PROFILE WORD . WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT DELIMITER
     (8) exp -> CREATE TRAINING_PROFILE WORD . WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT SHUFFLE BOOL DELIMITER
 
-    WITH            shift and go to state 16
+    WITH            shift and go to state 19
 
 
-state 13
+state 15
 
     (9) exp -> TRAIN WORD WITH . WORD DELIMITER
     (10) exp -> TRAIN WORD WITH . TRAINING_PROFILE WORD DELIMITER
 
-    WORD            shift and go to state 17
-    TRAINING_PROFILE shift and go to state 18
+    WORD            shift and go to state 20
+    TRAINING_PROFILE shift and go to state 21
 
 
-state 14
+state 16
 
     (11) exp -> USE URL DELIMITER .
 
     $end            reduce using rule 11 (exp -> USE URL DELIMITER .)
 
 
-state 15
+state 17
+
+    (13) exp -> SET DEBUG BOOL . DELIMITER
+
+    DELIMITER       shift and go to state 22
+
+
+state 18
 
     (1) exp -> CREATE ESTIMATOR WORD TYPE . WORD FORMULA FORMULA_EXP DELIMITER
     (2) exp -> CREATE ESTIMATOR WORD TYPE . WORD FORMULA FORMULA_EXP LOSS WORD DELIMITER
     (3) exp -> CREATE ESTIMATOR WORD TYPE . WORD FORMULA FORMULA_EXP LOSS WORD LEARNING_RATE FLOAT DELIMITER
     (4) exp -> CREATE ESTIMATOR WORD TYPE . WORD FORMULA FORMULA_EXP LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER
 
-    WORD            shift and go to state 19
+    WORD            shift and go to state 23
 
 
-state 16
+state 19
 
     (5) exp -> CREATE TRAINING_PROFILE WORD WITH . SQL DELIMITER
     (6) exp -> CREATE TRAINING_PROFILE WORD WITH . SQL AND VALIDATION_SPLIT FLOAT DELIMITER
     (7) exp -> CREATE TRAINING_PROFILE WORD WITH . SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT DELIMITER
     (8) exp -> CREATE TRAINING_PROFILE WORD WITH . SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT SHUFFLE BOOL DELIMITER
 
-    SQL             shift and go to state 20
+    SQL             shift and go to state 24
 
 
-state 17
+state 20
 
     (9) exp -> TRAIN WORD WITH WORD . DELIMITER
 
-    DELIMITER       shift and go to state 21
+    DELIMITER       shift and go to state 25
 
 
-state 18
+state 21
 
     (10) exp -> TRAIN WORD WITH TRAINING_PROFILE . WORD DELIMITER
 
-    WORD            shift and go to state 22
+    WORD            shift and go to state 26
 
 
-state 19
+state 22
+
+    (13) exp -> SET DEBUG BOOL DELIMITER .
+
+    $end            reduce using rule 13 (exp -> SET DEBUG BOOL DELIMITER .)
+
+
+state 23
 
     (1) exp -> CREATE ESTIMATOR WORD TYPE WORD . FORMULA FORMULA_EXP DELIMITER
     (2) exp -> CREATE ESTIMATOR WORD TYPE WORD . FORMULA FORMULA_EXP LOSS WORD DELIMITER
     (3) exp -> CREATE ESTIMATOR WORD TYPE WORD . FORMULA FORMULA_EXP LOSS WORD LEARNING_RATE FLOAT DELIMITER
     (4) exp -> CREATE ESTIMATOR WORD TYPE WORD . FORMULA FORMULA_EXP LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER
 
-    FORMULA         shift and go to state 23
+    FORMULA         shift and go to state 27
 
 
-state 20
+state 24
 
     (5) exp -> CREATE TRAINING_PROFILE WORD WITH SQL . DELIMITER
     (6) exp -> CREATE TRAINING_PROFILE WORD WITH SQL . AND VALIDATION_SPLIT FLOAT DELIMITER
     (7) exp -> CREATE TRAINING_PROFILE WORD WITH SQL . AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT DELIMITER
     (8) exp -> CREATE TRAINING_PROFILE WORD WITH SQL . AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT SHUFFLE BOOL DELIMITER
 
-    DELIMITER       shift and go to state 24
-    AND             shift and go to state 25
+    DELIMITER       shift and go to state 28
+    AND             shift and go to state 29
 
 
-state 21
+state 25
 
     (9) exp -> TRAIN WORD WITH WORD DELIMITER .
 
     $end            reduce using rule 9 (exp -> TRAIN WORD WITH WORD DELIMITER .)
 
 
-state 22
+state 26
 
     (10) exp -> TRAIN WORD WITH TRAINING_PROFILE WORD . DELIMITER
 
-    DELIMITER       shift and go to state 26
+    DELIMITER       shift and go to state 30
 
 
-state 23
+state 27
 
     (1) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA . FORMULA_EXP DELIMITER
     (2) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA . FORMULA_EXP LOSS WORD DELIMITER
     (3) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA . FORMULA_EXP LOSS WORD LEARNING_RATE FLOAT DELIMITER
     (4) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA . FORMULA_EXP LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER
 
-    FORMULA_EXP     shift and go to state 27
+    FORMULA_EXP     shift and go to state 31
 
 
-state 24
+state 28
 
     (5) exp -> CREATE TRAINING_PROFILE WORD WITH SQL DELIMITER .
 
     $end            reduce using rule 5 (exp -> CREATE TRAINING_PROFILE WORD WITH SQL DELIMITER .)
 
 
-state 25
+state 29
 
     (6) exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND . VALIDATION_SPLIT FLOAT DELIMITER
     (7) exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND . VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT DELIMITER
     (8) exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND . VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT SHUFFLE BOOL DELIMITER
 
-    VALIDATION_SPLIT shift and go to state 28
+    VALIDATION_SPLIT shift and go to state 32
 
 
-state 26
+state 30
 
     (10) exp -> TRAIN WORD WITH TRAINING_PROFILE WORD DELIMITER .
 
     $end            reduce using rule 10 (exp -> TRAIN WORD WITH TRAINING_PROFILE WORD DELIMITER .)
 
 
-state 27
+state 31
 
     (1) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP . DELIMITER
     (2) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP . LOSS WORD DELIMITER
     (3) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP . LOSS WORD LEARNING_RATE FLOAT DELIMITER
     (4) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP . LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER
 
-    DELIMITER       shift and go to state 29
-    LOSS            shift and go to state 30
+    DELIMITER       shift and go to state 33
+    LOSS            shift and go to state 34
 
 
-state 28
+state 32
 
     (6) exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT . FLOAT DELIMITER
     (7) exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT . FLOAT BATCH_SIZE INT EPOCH INT DELIMITER
     (8) exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT . FLOAT BATCH_SIZE INT EPOCH INT SHUFFLE BOOL DELIMITER
 
-    FLOAT           shift and go to state 31
+    FLOAT           shift and go to state 35
 
 
-state 29
+state 33
 
     (1) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP DELIMITER .
 
     $end            reduce using rule 1 (exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP DELIMITER .)
 
 
-state 30
+state 34
 
     (2) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP LOSS . WORD DELIMITER
     (3) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP LOSS . WORD LEARNING_RATE FLOAT DELIMITER
     (4) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP LOSS . WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER
 
-    WORD            shift and go to state 32
+    WORD            shift and go to state 36
 
 
-state 31
+state 35
 
     (6) exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT . DELIMITER
     (7) exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT . BATCH_SIZE INT EPOCH INT DELIMITER
     (8) exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT . BATCH_SIZE INT EPOCH INT SHUFFLE BOOL DELIMITER
 
-    DELIMITER       shift and go to state 33
-    BATCH_SIZE      shift and go to state 34
+    DELIMITER       shift and go to state 37
+    BATCH_SIZE      shift and go to state 38
 
 
-state 32
+state 36
 
     (2) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP LOSS WORD . DELIMITER
     (3) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP LOSS WORD . LEARNING_RATE FLOAT DELIMITER
     (4) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP LOSS WORD . LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER
 
-    DELIMITER       shift and go to state 35
-    LEARNING_RATE   shift and go to state 36
+    DELIMITER       shift and go to state 39
+    LEARNING_RATE   shift and go to state 40
 
 
-state 33
+state 37
 
     (6) exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT DELIMITER .
 
     $end            reduce using rule 6 (exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT DELIMITER .)
 
 
-state 34
+state 38
 
     (7) exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE . INT EPOCH INT DELIMITER
     (8) exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE . INT EPOCH INT SHUFFLE BOOL DELIMITER
 
-    INT             shift and go to state 37
+    INT             shift and go to state 41
 
 
-state 35
+state 39
 
     (2) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP LOSS WORD DELIMITER .
 
     $end            reduce using rule 2 (exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP LOSS WORD DELIMITER .)
 
 
-state 36
+state 40
 
     (3) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP LOSS WORD LEARNING_RATE . FLOAT DELIMITER
     (4) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP LOSS WORD LEARNING_RATE . FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER
 
-    FLOAT           shift and go to state 38
+    FLOAT           shift and go to state 42
 
 
-state 37
+state 41
 
     (7) exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT . EPOCH INT DELIMITER
     (8) exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT . EPOCH INT SHUFFLE BOOL DELIMITER
 
-    EPOCH           shift and go to state 39
+    EPOCH           shift and go to state 43
 
 
-state 38
+state 42
 
     (3) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP LOSS WORD LEARNING_RATE FLOAT . DELIMITER
     (4) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP LOSS WORD LEARNING_RATE FLOAT . OPTIMIZER WORD REGULARIZER WORD DELIMITER
 
-    DELIMITER       shift and go to state 40
-    OPTIMIZER       shift and go to state 41
+    DELIMITER       shift and go to state 44
+    OPTIMIZER       shift and go to state 45
 
 
-state 39
+state 43
 
     (7) exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH . INT DELIMITER
     (8) exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH . INT SHUFFLE BOOL DELIMITER
 
-    INT             shift and go to state 42
+    INT             shift and go to state 46
 
 
-state 40
+state 44
 
     (3) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP LOSS WORD LEARNING_RATE FLOAT DELIMITER .
 
     $end            reduce using rule 3 (exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP LOSS WORD LEARNING_RATE FLOAT DELIMITER .)
 
 
-state 41
+state 45
 
     (4) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP LOSS WORD LEARNING_RATE FLOAT OPTIMIZER . WORD REGULARIZER WORD DELIMITER
 
-    WORD            shift and go to state 43
+    WORD            shift and go to state 47
 
 
-state 42
+state 46
 
     (7) exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT . DELIMITER
     (8) exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT . SHUFFLE BOOL DELIMITER
 
-    DELIMITER       shift and go to state 44
-    SHUFFLE         shift and go to state 45
+    DELIMITER       shift and go to state 48
+    SHUFFLE         shift and go to state 49
 
 
-state 43
+state 47
 
     (4) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD . REGULARIZER WORD DELIMITER
 
-    REGULARIZER     shift and go to state 46
+    REGULARIZER     shift and go to state 50
 
 
-state 44
+state 48
 
     (7) exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT DELIMITER .
 
     $end            reduce using rule 7 (exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT DELIMITER .)
 
 
-state 45
+state 49
 
     (8) exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT SHUFFLE . BOOL DELIMITER
 
-    BOOL            shift and go to state 47
+    BOOL            shift and go to state 51
 
 
-state 46
+state 50
 
     (4) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER . WORD DELIMITER
 
-    WORD            shift and go to state 48
+    WORD            shift and go to state 52
 
 
-state 47
+state 51
 
     (8) exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT SHUFFLE BOOL . DELIMITER
 
-    DELIMITER       shift and go to state 49
+    DELIMITER       shift and go to state 53
 
 
-state 48
+state 52
 
     (4) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD . DELIMITER
 
-    DELIMITER       shift and go to state 50
+    DELIMITER       shift and go to state 54
 
 
-state 49
+state 53
 
     (8) exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT SHUFFLE BOOL DELIMITER .
 
     $end            reduce using rule 8 (exp -> CREATE TRAINING_PROFILE WORD WITH SQL AND VALIDATION_SPLIT FLOAT BATCH_SIZE INT EPOCH INT SHUFFLE BOOL DELIMITER .)
 
 
-state 50
+state 54
 
     (4) exp -> CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP LOSS WORD LEARNING_RATE FLOAT OPTIMIZER WORD REGULARIZER WORD DELIMITER .
 

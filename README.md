@@ -5,8 +5,8 @@ License: BSD 3
 # Overall System Architecture
 
 # Using the parser:
-1. Navigate to folder "parser"
-2. run parser.py as a python application
+1. Navigate to root folder 
+2. run "parser/parser.py" as a python application (You need to execute it from the root folder.)
 
 
 ## Creating an estimator
