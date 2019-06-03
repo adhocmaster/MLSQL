@@ -39,14 +39,6 @@ class ASTProcessor:
     
     def createEstimator(self, name, estimatorType, formula = None, loss = None, lr = 0.001, optimizer = None, regularizer = None):
 
-        print(f"""name = {name}, 
-                estimatorType={estimatorType}, 
-                formula={formula}, 
-                loss={loss}, 
-                lr={lr}, 
-                optimizer={optimizer}, 
-                regularizer={regularizer}
-                """)
         with db:
             estimatorMeta = EstimatorMeta.create(name = name, 
                                         estimatorType=estimatorType, 
@@ -71,18 +63,11 @@ class ASTProcessor:
     
     def createTrainingProfile(self, name, sql, validationSplit, batchSize, epoch, shuffle):
 
-        print(f"""name={name},
-                source={sql},
-                validation_split={validationSplit},
-                batch_size={batchSize},
-                epoch={epoch},
-                shuffle={shuffle}""")
-
         with db:
             trainingProfile = TrainingProfile.create(name=name,
                                                     source=sql,
-                                                    validation_split=validationSplit,
-                                                    batch_size=batchSize,
+                                                    validationSplit=validationSplit,
+                                                    batchSize=batchSize,
                                                     epoch=epoch,
                                                     shuffle=shuffle
                                                     )

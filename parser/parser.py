@@ -84,7 +84,7 @@ def p_create_model(p):
                                                 lr=lr, 
                                                 optimizer=optimizer, 
                                                 regularizer=regularizer)
-        print(f"Created estimator with name {name}")
+        print(f"Created estimator:\n{estimator}")
     except Exception as e:
         printError(e)
     
@@ -117,7 +117,7 @@ def p_training_profile(p):
     
     try:
         profile = ASTProcessor.createTrainingProfile(name=name, sql=sql, validationSplit=validationSplit, batchSize=batchSize, epoch=epoch, shuffle=shuffle)
-        print(f"Created training profile with name {name}")
+        print(f"Created training profile:\n{profile}")
     except Exception as e:
         printError(e)
     pass
@@ -163,7 +163,7 @@ def p_clone_model(p):
 
     try:
         estimatorMeta = ASTProcessor.cloneModel(fromName, toName, keepWeights)
-        print(f"Created estimator with name {estimatorMeta.name}")
+        print(f"Cloned estimator:{estimatorMeta}")
     except Exception as e:
         printError(e)
     pass

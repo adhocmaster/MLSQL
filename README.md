@@ -12,6 +12,10 @@ License: BSD 3
 5. Pandas package
 6. Dill package
 
+# Installing the parser:
+1. Navigate to root folder 
+2. run "data/setup.py" as a python application (You need to execute it from the root folder.)
+
 # Using the parser:
 1. Navigate to root folder 
 2. run "parser/parser.py" as a python application (You need to execute it from the root folder.)

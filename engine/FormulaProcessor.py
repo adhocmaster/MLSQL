@@ -39,7 +39,7 @@ class FormulaProcessor:
         X = df[self.fieldsX].values
         y = df[self.fieldY].values
         
-        if trainingProfile.validation_split <= 0:
+        if trainingProfile.validationSplit <= 0:
             return X, None, y, None
 
-        return train_test_split(X, y, test_size = trainingProfile.validation_split , random_state = randomSeed)
+        return train_test_split(X, y, test_size = trainingProfile.validationSplit , random_state = randomSeed)
