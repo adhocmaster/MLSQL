@@ -1,4 +1,4 @@
-
+parselog.txt
 definitions.db
 data/*.db
 engine/estimators/*.dill
