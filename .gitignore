@@ -1,9 +1,8 @@
+
+definitions.db
 data/*.db
-/data/*.db
-test/*.db
-/test/*.db
-engine/estimators
-/engine/estimators
+engine/estimators/*.*
+
 lib/.ipynb_checkpoints/__init__.py-checkpoint.ipynb
 # Byte-compiled / optimized / DLL files
 __pycache__/
