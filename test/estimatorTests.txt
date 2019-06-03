@@ -10,3 +10,5 @@ TRAIN salaryPredictor WITH TRAINING_PROFILE oneshotSalary;
 TRAIN salaryPredictor WITH TRAINING PROFILE oneshotSalary;
 
 USE 'data/salarydb.db';
+
+CLONE ESTIMATOR salaryPredictor AS clonedSalaryPredictor;

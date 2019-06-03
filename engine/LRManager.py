@@ -6,7 +6,7 @@ from engine.EstimatorManager import EstimatorManager
 class LRManager(EstimatorManager):
 
     def __init__(self):
-        super(LRManager,self).__init__()
+        super(LRManager,self).__init__(clonable=True)
 
 
     def create(self, name):

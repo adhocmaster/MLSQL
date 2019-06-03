@@ -2,7 +2,8 @@ import dill
 
 class EstimatorManager:
 
-    def __init__(self):
+    def __init__(self, clonable):
+        self.clonable = clonable
         self.estimator_folder =  "engine/estimators/"
 
 

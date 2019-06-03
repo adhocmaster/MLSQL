@@ -1,5 +1,6 @@
 modelTokens = [
     'CREATE',
+    'CLONE',
     'MODEL',
     'ESTIMATOR',
     'REGULARIZER',
@@ -8,7 +9,8 @@ modelTokens = [
     'FORMULA_EXP',
     'LOSS',
     'LEARNING_RATE',
-    'OPTIMIZER'
+    'OPTIMIZER',
+    'WEIGHTS'
 ]
 
 trainProfileTokens = [
@@ -27,24 +29,3 @@ trainTokens = [
     'TRAIN'
 ]
 
-    
-"""
-def t_CREATE(t):
-    r'CREATE'
-    return t
-def t_MODEL(t):
-    r'MODEL|ESTIMATOR'
-    return t
-    
-def t_REGULARIZER(t):
-    r'REGULARIZER'
-    return t
-    
-def t_TYPE(t):
-    r'TYPE'
-    return t
-    
-def t_FORMULA(t):
-    r'TYPE'
-    return t
-"""

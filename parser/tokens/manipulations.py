@@ -6,5 +6,6 @@ trainTokens = [
 
 utilityTokens = [
     'SET',
-    'DEBUG'
+    'DEBUG',
+    'AS'
 ]

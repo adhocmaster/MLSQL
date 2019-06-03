@@ -39,6 +39,10 @@ Syntax: TRAIN **estimator_name** WITH TRAINING PROFILE **profile_name**;
 
 Example: TRAIN **salaryPredictor** WITH TRAINING PROFILE **oneshotSalary**;
 
+Syntax: TRAIN **estimator_name** WITH **profile_name**;
+
+Example: TRAIN **salaryPredictor** WITH **oneshotSalary**;
+
 # Advanced Usage:
 1. Reusing an estimator
 2. Reusing a training profile

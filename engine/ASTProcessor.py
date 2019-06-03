@@ -139,5 +139,24 @@ class ASTProcessor:
         estimatorMeta.save()
 
 
-    
+    def cloneModel(self, fromName, toName, keepWeights = False):
+
+        fromEstimatorMeta = self.getEstimatorMeta(fromName)
+        
+        if fromEstimatorMeta.estimatorType == 'LR':
+            estimatorManager = LRManager()
+
+            if estimatorManager.clonable == False:
+                raise Exception(f"{fromEstimatorMeta.estimatorType} estimators cannot be cloned")
+            else:
+                estimatorMeta = self.createEstimator(name=toName,
+                                                    estimatorType=fromEstimatorMeta.estimatorType,
+                                                    formula=fromEstimatorMeta.formula,
+                                                    loss=fromEstimatorMeta.loss,
+                                                    lr=fromEstimatorMeta.lr,
+                                                    optimizer=fromEstimatorMeta.optimizer,
+                                                    regularizer=fromEstimatorMeta.regularizer                                
+                                                    )
+                return estimatorMeta
+        pass
     

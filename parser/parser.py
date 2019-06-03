@@ -144,7 +144,29 @@ def p_train(p):
         printError(e)
     pass
     
+    
+def p_clone_model(p):
+    '''exp : CLONE ESTIMATOR WORD AS WORD DELIMITER
+           | CLONE ESTIMATOR WORD AS WORD WITH WEIGHTS DELIMITER'''
+    printMatchedRule('p_clone_model')
+    global currentState
+    currentState = TRAIN
 
+    length = len(p)
+    fromName = p[3]
+    toName = p[5]
+    keepWeights = False
+
+    if length > 7:
+        if p[7] == 'WEIGHTS':
+            keepWeights = True
+
+    try:
+        estimatorMeta = ASTProcessor.cloneModel(fromName, toName, keepWeights)
+        print(f"Created estimator with name {estimatorMeta.name}")
+    except Exception as e:
+        printError(e)
+    pass
 
 
 def p_use_database(p):
@@ -193,7 +215,7 @@ def p_error(t):
 
 def printError(e):
     global DEBUG
-    print("Operation failed due to:")
+    print("Error:", end=" ")
     print(e)
 
     if DEBUG:
@@ -212,12 +234,20 @@ parser = yacc.yacc(debug=True)
 # with open("parser/parser.dill", "wb") as f:
 #     dill.dump(parser, f)
 
+def welcome():
+    print(f'''
+******** Welcome to MLSQL (version egg)*******
+The first open-source SQL for Machine Learning
+**********************************************
+''')
+    pass
+
 
 if __name__ == "__main__":
 
+    welcome()
     userInput  = ''
     prevInput = ''
-    print(f'''\n********* Welcome to MLSQL (version egg)*********\n The first open-source SQL for Machine Learning.''')
     while True:
         print('MLSQL>', end=" ")
         userInput = input().strip()
@@ -235,7 +265,7 @@ if __name__ == "__main__":
         
 
         data = prevInput + userInput
-        print(f"parsing {data}")
+        # print(f"parsing {data}")
         p = parser.parse(data)
         # print(p)
 
