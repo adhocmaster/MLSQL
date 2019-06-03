@@ -102,8 +102,8 @@ class ASTProcessor:
 
             trainingProfile = self.getTrainingProfile(trainingProfileName)
 
-            self.pp.pprint(estimatorMeta)
-            self.pp.pprint(trainingProfile)
+            # self.pp.pprint(estimatorMeta)
+            # self.pp.pprint(trainingProfile)
 
             formulaProcessor = FormulaProcessor(estimatorMeta.formula)
 
@@ -126,8 +126,8 @@ class ASTProcessor:
         except TrainingProfile.DoesNotExist as e:
             raise Exception(f"{trainingProfileName} estimator does not exist ({e}.")
     
-    def postTrain(self, estimatorMeta):
-        estimatorMeta.trainable = False
+    def postTrain(self, estimatorMeta, stillTrainable = False):
+        estimatorMeta.trainable = stillTrainable
         estimatorMeta.save()
 
 

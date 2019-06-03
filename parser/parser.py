@@ -121,8 +121,14 @@ def p_train(p):
     global currentState
     currentState = TRAIN
 
+    length = len(p)
     estimatorName = p[2]
-    trainingProfileName = p[5]
+    
+    if length == 6:
+        trainingProfileName = p[4]
+    else:
+        trainingProfileName = p[5]
+
     try:
         ASTProcessor.train(currentDB,estimatorName, trainingProfileName)
     except Exception as e:
