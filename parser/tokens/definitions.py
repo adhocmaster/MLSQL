@@ -22,10 +22,15 @@ trainProfileTokens = [
     'SHUFFLE',
     'VALIDATION_SPLIT',
     'WITH',
-    'USE'
+    'USE',
+    'BY'
 ]
 
 trainTokens = [
     'TRAIN'
 ]
 
+predictTokens = [
+    'PREDICT',
+    'TEST'
+]

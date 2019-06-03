@@ -26,8 +26,8 @@ from engine.ASTProcessor import ASTProcessor
 #******Environment Setup******
 
 ASTProcessor = ASTProcessor()
-ESTIMATOR, TRAIN, TRAINING_PROFILE, USE = range(4)
-states = ['ESTIMATOR', 'TRAIN', 'TRAINING_PROFILE', 'USE' ]
+ESTIMATOR, TRAIN, TRAINING_PROFILE, USE, PREDICT = range(5)
+states = ['ESTIMATOR', 'TRAIN', 'TRAINING_PROFILE', 'USE', 'PREDICT' ]
 currentState = None
 currentDB = None #database connector instance, not url.
 
@@ -143,6 +143,14 @@ def p_train(p):
     except Exception as e:
         printError(e)
     pass
+
+
+def p_predict(p):
+    '''exp : PREDICT WITH WORD BY ESTIMATOR WORD DELIMITER
+           | TEST WITH WORD BY ESTIMATOR WORD DELIMITER'''
+    printMatchedRule('p_predict')
+    global currentState
+    currentState = PREDICT
     
     
 def p_clone_model(p):
@@ -150,7 +158,7 @@ def p_clone_model(p):
            | CLONE ESTIMATOR WORD AS WORD WITH WEIGHTS DELIMITER'''
     printMatchedRule('p_clone_model')
     global currentState
-    currentState = TRAIN
+    currentState = ESTIMATOR
 
     length = len(p)
     fromName = p[3]

@@ -11,6 +11,7 @@ keywords = list(set().union(
             modelTokens,
             trainTokens,
             trainProfileTokens,
+            predictTokens,
             utilityTokens
             ))
 tokens =  list(set().union(
@@ -31,7 +32,7 @@ def t_BOOL(t):
     
     return t
 
-    
+
 def t_SQL(t):
     r'\[\s*[SELECT,UPDATE]+[^\];]*\]'
     t.value = t.value[1:len(t.value)-1].strip()
