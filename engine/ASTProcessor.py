@@ -66,6 +66,7 @@ class ASTProcessor:
         with db:
             trainingProfile = TrainingProfile.create(name=name,
                                                     source=sql,
+                                                    sourceType='sql',
                                                     validationSplit=validationSplit,
                                                     batchSize=batchSize,
                                                     epoch=epoch,
@@ -145,3 +146,46 @@ class ASTProcessor:
                 return estimatorMeta
         pass
     
+
+    def predict(self, currentDB, estimatorName, sql=None, trainingProfileName=None):
+
+        try:
+            #1 Check DB
+            if currentDB is None:
+                raise Exception(f"no Database chosen to draw training data from. hint: [USE DBUrl;]")
+            
+            #2 Check Estimator
+            estimatorMeta = self.getEstimatorMeta(estimatorName)
+            if estimatorMeta.isAvailable == False:
+                raise Exception(f"Estimator {estimatorMeta.name} is not availble for use.")
+            
+            if trainingProfileName is not None:
+                return self.predictWithTrainingProfile(currentDB, estimatorMeta, trainingProfileName)
+            else:
+                return self.predictWithSQL(currentDB, estimatorMeta, sql)
+
+        except EstimatorMeta.DoesNotExist as e:
+            raise Exception(f"{estimatorName} estimator does not exist ({e}).")
+
+        except TrainingProfile.DoesNotExist as e:
+            raise Exception(f"{trainingProfileName} estimator does not exist ({e}.")
+    
+    def predictWithTrainingProfile(self, currentDB, estimatorMeta, trainingProfileName):
+        trainingProfile = self.getTrainingProfile(trainingProfileName)
+        if trainingProfile.sourceType == 'sql':
+            return self.predictWithSQL(currentDB, estimatorMeta, trainingProfile.source)
+        else:
+            raise NotImplementedError("prediction with non-sql training profile not implemented yet.")
+
+    
+    def predictWithSQL(self, currentDB, estimatorMeta, sql):
+
+        # X = FormulaProcessor(estimatorMeta.formula).getXFromSQL(currentDB, sql)
+        df, X = FormulaProcessor(estimatorMeta.formula).getDfAndXFromSQL(currentDB, sql, onlyPredictors=True)
+        
+        if estimatorMeta.estimatorType == 'LR':
+            estimatorManager = LRManager()
+            predictions = estimatorManager.predict(estimatorMeta.name, X)
+            df['prediction'] = predictions
+            # df['error %'] = estimatorManager.getPercentageError()
+            return df

@@ -1,9 +1,9 @@
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import median_absolute_error
 import dill
-from engine.EstimatorManager import EstimatorManager
+from engine.RegressionManager import RegressionManager
 
-class LRManager(EstimatorManager):
+class LRManager(RegressionManager):
 
     def __init__(self):
         super(LRManager,self).__init__(clonable=True)
@@ -34,5 +34,11 @@ class LRManager(EstimatorManager):
         estimator = self.load(name)
         pred =  estimator.predict(X)
         return pred
-
+    
+    def evaluate(self, name, X, y):
+        yPred = self.predict(name, X)
+        dic = {}
+        dic['training_mae'] = median_absolute_error(y, yPred)
+        return dic, yPred
+    
     

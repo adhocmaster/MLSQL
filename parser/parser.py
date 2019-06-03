@@ -127,7 +127,7 @@ def p_train(p):
     '''exp : TRAIN WORD WITH WORD DELIMITER
            | TRAIN WORD WITH TRAINING_PROFILE WORD DELIMITER'''
     printMatchedRule('p_train')
-    global currentState
+    global currentState, currentDB
     currentState = TRAIN
 
     length = len(p)
@@ -139,18 +139,36 @@ def p_train(p):
         trainingProfileName = p[5]
 
     try:
-        ASTProcessor.train(currentDB,estimatorName, trainingProfileName)
+        ASTProcessor.train(currentDB, estimatorName, trainingProfileName)
     except Exception as e:
         printError(e)
     pass
 
 
 def p_predict(p):
-    '''exp : PREDICT WITH WORD BY ESTIMATOR WORD DELIMITER
-           | TEST WITH WORD BY ESTIMATOR WORD DELIMITER'''
+    '''exp : PREDICT WITH SQL BY ESTIMATOR WORD DELIMITER
+           | PREDICT WITH TRAINING_PROFILE WORD BY ESTIMATOR WORD DELIMITER'''
     printMatchedRule('p_predict')
-    global currentState
+    global currentState, currentDB
     currentState = PREDICT
+
+    length = len(p)
+
+    sql = p[3]
+    estimatorName = p[6]
+    trainingProfileName = None
+    if p[3] == 'TRAINING_PROFILE':
+        sql = None
+        estimatorName = p[7]
+        trainingProfileName = p[4]
+
+    try:
+        df = ASTProcessor.predict(currentDB, estimatorName,sql=sql, trainingProfileName=trainingProfileName )
+        print(df.to_string()) # TODO, use an internal state in parser and print with arrows and exit commands.
+    except Exception as e:
+        printError(e)
+    pass
+
     
     
 def p_clone_model(p):

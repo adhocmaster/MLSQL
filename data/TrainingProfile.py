@@ -6,7 +6,7 @@ class TrainingProfile(Model):
     name = CharField(primary_key=True)
     dateCreated = DateTimeField(default=datetime.datetime.now)
     source = CharField()
-    sourcetype = CharField(default='sql')
+    sourceType = CharField(default='sql')
     validationSplit = FloatField(default=0)
     batchSize = IntegerField(default=0)
     epoch = IntegerField(default=1)
@@ -19,7 +19,7 @@ class TrainingProfile(Model):
         return f"""name: {self.name}, 
 dateCreated: {self.dateCreated},
 source: {self.source},
-sourcetype: {self.sourcetype},
+sourceType: {self.sourceType},
 validationSplit: {self.validationSplit},
 batchSize: {self.batchSize},
 epoch: {self.epoch},
