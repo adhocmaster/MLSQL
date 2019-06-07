@@ -1,4 +1,8 @@
-data/
+parselog.txt
+definitions.db
+data/*.db
+engine/estimators/*.dill
+
 lib/.ipynb_checkpoints/__init__.py-checkpoint.ipynb
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -23,13 +23,22 @@ import dill
 from lexer import tokens
 from engine.ASTProcessor import ASTProcessor
 
+#******Environment Setup******
+
 ASTProcessor = ASTProcessor()
-ESTIMATOR, TRAIN, TRAINING_PROFILE, USE = range(4)
-states = ['ESTIMATOR', 'TRAIN', 'TRAINING_PROFILE', 'USE' ]
+ESTIMATOR, TRAIN, TRAINING_PROFILE, USE, PREDICT = range(5)
+states = ['ESTIMATOR', 'TRAIN', 'TRAINING_PROFILE', 'USE', 'PREDICT' ]
 currentState = None
 currentDB = None #database connector instance, not url.
 
+DEBUG = False
+def setDebug(debug = False):
+    global DEBUG
+    DEBUG = debug
 
+#******Environment Setup Ends******
+
+#***********Grammar******************
 def p_create_model(p):
     '''exp : CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP DELIMITER
             | CREATE ESTIMATOR WORD TYPE WORD FORMULA FORMULA_EXP LOSS WORD DELIMITER
@@ -75,7 +84,7 @@ def p_create_model(p):
                                                 lr=lr, 
                                                 optimizer=optimizer, 
                                                 regularizer=regularizer)
-        print(f"Created estimator with name {name}")
+        print(f"Created estimator:\n{estimator}")
     except Exception as e:
         printError(e)
     
@@ -108,7 +117,7 @@ def p_training_profile(p):
     
     try:
         profile = ASTProcessor.createTrainingProfile(name=name, sql=sql, validationSplit=validationSplit, batchSize=batchSize, epoch=epoch, shuffle=shuffle)
-        print(f"Created training profile with name {name}")
+        print(f"Created training profile:\n{profile}")
     except Exception as e:
         printError(e)
     pass
@@ -118,18 +127,72 @@ def p_train(p):
     '''exp : TRAIN WORD WITH WORD DELIMITER
            | TRAIN WORD WITH TRAINING_PROFILE WORD DELIMITER'''
     printMatchedRule('p_train')
-    global currentState
+    global currentState, currentDB
     currentState = TRAIN
 
+    length = len(p)
     estimatorName = p[2]
-    trainingProfileName = p[5]
+    
+    if length == 6:
+        trainingProfileName = p[4]
+    else:
+        trainingProfileName = p[5]
+
     try:
-        ASTProcessor.train(currentDB,estimatorName, trainingProfileName)
+        ASTProcessor.train(currentDB, estimatorName, trainingProfileName)
     except Exception as e:
         printError(e)
     pass
-    
 
+
+def p_predict(p):
+    '''exp : PREDICT WITH SQL BY ESTIMATOR WORD DELIMITER
+           | PREDICT WITH TRAINING_PROFILE WORD BY ESTIMATOR WORD DELIMITER'''
+    printMatchedRule('p_predict')
+    global currentState, currentDB
+    currentState = PREDICT
+
+    length = len(p)
+
+    sql = p[3]
+    estimatorName = p[6]
+    trainingProfileName = None
+    if p[3] == 'TRAINING_PROFILE':
+        sql = None
+        estimatorName = p[7]
+        trainingProfileName = p[4]
+
+    try:
+        df = ASTProcessor.predict(currentDB, estimatorName,sql=sql, trainingProfileName=trainingProfileName )
+        print(df.to_string()) # TODO, use an internal state in parser and print with arrows and exit commands.
+    except Exception as e:
+        printError(e)
+    pass
+
+    
+    
+def p_clone_model(p):
+    '''exp : CLONE ESTIMATOR WORD AS WORD DELIMITER
+           | CLONE ESTIMATOR WORD AS WORD WITH WEIGHTS DELIMITER'''
+    printMatchedRule('p_clone_model')
+    global currentState
+    currentState = ESTIMATOR
+
+    length = len(p)
+    fromName = p[3]
+    toName = p[5]
+    keepWeights = False
+
+    if length > 7:
+        if p[7] == 'WEIGHTS':
+            keepWeights = True
+
+    try:
+        estimatorMeta = ASTProcessor.cloneModel(fromName, toName, keepWeights)
+        print(f"Cloned estimator:{estimatorMeta}")
+    except Exception as e:
+        printError(e)
+    pass
 
 
 def p_use_database(p):
@@ -155,6 +218,20 @@ def p_SQL(p):
 
     pass
 
+def p_DEBUG(p):
+    'exp : SET DEBUG BOOL DELIMITER'
+    printMatchedRule('p_DEBUG')
+    global DEBUG
+    DEBUG = p[3]
+    # if p[3] == 'true':
+    #     DEBUG = True
+    # else:
+    #     DEBUG = False
+    
+    print(f"Debug set to {p[3]}")
+
+    pass
+
 
 def p_error(t):
     printError('Syntax error at "%s"' % t.value if t else 'NULL')
@@ -163,27 +240,42 @@ def p_error(t):
     pass
 
 def printError(e):
-    print("Operation failed due to:")
+    global DEBUG
+    print("Error:", end=" ")
     print(e)
-    print("strack trace:")
-    for line in traceback.format_stack():
-        print(line.strip())
+
+    if DEBUG:
+        print("strack trace:")
+        for line in traceback.format_stack():
+            print(line.strip())
 
 def printMatchedRule(rule):
-    print(f"Matched Grammar Rule: {rule}")
+    if DEBUG:
+        print(f"Matched Grammar Rule: {rule}")
 
+#***********Grammar Ends******************
 # parser = yacc.yacc(debug=True, errorlog=log)
 parser = yacc.yacc(debug=True)
 
 # with open("parser/parser.dill", "wb") as f:
 #     dill.dump(parser, f)
 
+def welcome():
+    print(f'''
+******** Welcome to MLSQL (version egg)*******
+The first open-source SQL for Machine Learning
+**********************************************
+''')
+    pass
+
 
 if __name__ == "__main__":
 
+    welcome()
     userInput  = ''
     prevInput = ''
     while True:
+        print('MLSQL>', end=" ")
         userInput = input().strip()
 
         if userInput == 'exit':
@@ -199,7 +291,7 @@ if __name__ == "__main__":
         
 
         data = prevInput + userInput
-        print(f"parsing {data}")
+        # print(f"parsing {data}")
         p = parser.parse(data)
         # print(p)
 

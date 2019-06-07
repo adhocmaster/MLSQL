@@ -39,7 +39,26 @@ class FormulaProcessor:
         X = df[self.fieldsX].values
         y = df[self.fieldY].values
         
-        if trainingProfile.validation_split <= 0:
+        if trainingProfile.validationSplit <= 0:
             return X, None, y, None
 
-        return train_test_split(X, y, test_size = trainingProfile.validation_split , random_state = randomSeed)
+        return train_test_split(X, y, test_size = trainingProfile.validationSplit , random_state = randomSeed)
+    
+    def getXFromSQL(self, dataDb, sql):
+        """returns (XTest) training and validation X,y, does not support categorical data yet"""
+        df = self.getDfFromSQL(dataDb, sql)
+        return df[self.fieldsX].values
+
+    def getDfFromSQL(self, dataDb, sql):
+        """returns (XTest) training and validation X,y, does not support categorical data yet"""
+        df = pd.read_sql(sql, dataDb.connection())
+        return df
+    
+    def getDfAndXFromSQL(self, dataDb, sql, onlyPredictors=True):
+        """returns (XTest) training and validation X,y, does not support categorical data yet"""
+        df = pd.read_sql(sql, dataDb.connection())
+        if onlyPredictors:
+            return df[self.fieldsX], df[self.fieldsX].values
+        else:
+            return df, df[self.fieldsX].values
+    

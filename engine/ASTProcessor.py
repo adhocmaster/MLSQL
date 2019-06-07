@@ -39,14 +39,6 @@ class ASTProcessor:
     
     def createEstimator(self, name, estimatorType, formula = None, loss = None, lr = 0.001, optimizer = None, regularizer = None):
 
-        print(f"""name = {name}, 
-                estimatorType={estimatorType}, 
-                formula={formula}, 
-                loss={loss}, 
-                lr={lr}, 
-                optimizer={optimizer}, 
-                regularizer={regularizer}
-                """)
         with db:
             estimatorMeta = EstimatorMeta.create(name = name, 
                                         estimatorType=estimatorType, 
@@ -71,18 +63,12 @@ class ASTProcessor:
     
     def createTrainingProfile(self, name, sql, validationSplit, batchSize, epoch, shuffle):
 
-        print(f"""name={name},
-                source={sql},
-                validation_split={validationSplit},
-                batch_size={batchSize},
-                epoch={epoch},
-                shuffle={shuffle}""")
-
         with db:
             trainingProfile = TrainingProfile.create(name=name,
                                                     source=sql,
-                                                    validation_split=validationSplit,
-                                                    batch_size=batchSize,
+                                                    sourceType='sql',
+                                                    validationSplit=validationSplit,
+                                                    batchSize=batchSize,
                                                     epoch=epoch,
                                                     shuffle=shuffle
                                                     )
@@ -93,32 +79,20 @@ class ASTProcessor:
     def train(self, currentDB, estimatorName, trainingProfileName):
 
         try:
+            #1 Check DB
             if currentDB is None:
                 raise Exception(f"no Database chosen to draw training data from. hint: [USE DBUrl;]")
+            
+            #2 Check Estimator
             estimatorMeta = self.getEstimatorMeta(estimatorName)
             if estimatorMeta.trainable == False:
                 raise Exception(f"Estimator {estimatorMeta.name} is not trainable. Try cloning?")
 
-
+            #3 Get training profile
             trainingProfile = self.getTrainingProfile(trainingProfileName)
 
-            self.pp.pprint(estimatorMeta)
-            self.pp.pprint(trainingProfile)
-
-            formulaProcessor = FormulaProcessor(estimatorMeta.formula)
-
-            XTrain, XValidation, yTrain, yValidation = formulaProcessor.getDataFromSQLDB(currentDB, trainingProfile)
-
-            self.pp.pprint("Running training with following configurations.")
-            self.pp.pprint(estimatorMeta)
-            self.pp.pprint(trainingProfile)
-
-            if estimatorMeta.estimatorType == 'LR':
-                estimatorManager = LRManager()
-                accuracyDic = estimatorManager.trainValidate(estimatorName, XTrain, XValidation, yTrain, yValidation)
-                self.postTrain(estimatorMeta)
-                self.pp.pprint(accuracyDic)
-                return accuracyDic
+            #4 Prepared data with formula processor and Train
+            return self.prepareDataAndTrain(currentDB, estimatorMeta, trainingProfile)
                        
         except EstimatorMeta.DoesNotExist as e:
             raise Exception(f"{estimatorName} estimator does not exist ({e}).")
@@ -126,10 +100,92 @@ class ASTProcessor:
         except TrainingProfile.DoesNotExist as e:
             raise Exception(f"{trainingProfileName} estimator does not exist ({e}.")
     
-    def postTrain(self, estimatorMeta):
-        estimatorMeta.trainable = False
+    
+    def prepareDataAndTrain(self, currentDB, estimatorMeta, trainingProfile):
+
+        #1 Prepared data with formula processor
+        formulaProcessor = FormulaProcessor(estimatorMeta.formula)
+        XTrain, XValidation, yTrain, yValidation = formulaProcessor.getDataFromSQLDB(currentDB, trainingProfile)
+
+        self.pp.pprint("Running training with following configurations.")
+        self.pp.pprint(estimatorMeta)
+        self.pp.pprint(trainingProfile)
+
+        #2 Train estimator with the data.
+        if estimatorMeta.estimatorType == 'LR':
+            estimatorManager = LRManager()
+            accuracyDic = estimatorManager.trainValidate(estimatorMeta.name, XTrain, XValidation, yTrain, yValidation)
+            self.postTrain(estimatorMeta)
+            self.pp.pprint(accuracyDic)
+            return accuracyDic
+
+    
+    def postTrain(self, estimatorMeta, stillTrainable = False):
+        estimatorMeta.trainable = stillTrainable
         estimatorMeta.save()
 
 
+    def cloneModel(self, fromName, toName, keepWeights = False):
+
+        fromEstimatorMeta = self.getEstimatorMeta(fromName)
+        
+        if fromEstimatorMeta.estimatorType == 'LR':
+            estimatorManager = LRManager()
+
+            if estimatorManager.clonable == False:
+                raise Exception(f"{fromEstimatorMeta.estimatorType} estimators cannot be cloned")
+            else:
+                estimatorMeta = self.createEstimator(name=toName,
+                                                    estimatorType=fromEstimatorMeta.estimatorType,
+                                                    formula=fromEstimatorMeta.formula,
+                                                    loss=fromEstimatorMeta.loss,
+                                                    lr=fromEstimatorMeta.lr,
+                                                    optimizer=fromEstimatorMeta.optimizer,
+                                                    regularizer=fromEstimatorMeta.regularizer                                
+                                                    )
+                return estimatorMeta
+        pass
     
+
+    def predict(self, currentDB, estimatorName, sql=None, trainingProfileName=None):
+
+        try:
+            #1 Check DB
+            if currentDB is None:
+                raise Exception(f"no Database chosen to draw training data from. hint: [USE DBUrl;]")
+            
+            #2 Check Estimator
+            estimatorMeta = self.getEstimatorMeta(estimatorName)
+            if estimatorMeta.isAvailable == False:
+                raise Exception(f"Estimator {estimatorMeta.name} is not availble for use.")
+            
+            if trainingProfileName is not None:
+                return self.predictWithTrainingProfile(currentDB, estimatorMeta, trainingProfileName)
+            else:
+                return self.predictWithSQL(currentDB, estimatorMeta, sql)
+
+        except EstimatorMeta.DoesNotExist as e:
+            raise Exception(f"{estimatorName} estimator does not exist ({e}).")
+
+        except TrainingProfile.DoesNotExist as e:
+            raise Exception(f"{trainingProfileName} estimator does not exist ({e}.")
     
+    def predictWithTrainingProfile(self, currentDB, estimatorMeta, trainingProfileName):
+        trainingProfile = self.getTrainingProfile(trainingProfileName)
+        if trainingProfile.sourceType == 'sql':
+            return self.predictWithSQL(currentDB, estimatorMeta, trainingProfile.source)
+        else:
+            raise NotImplementedError("prediction with non-sql training profile not implemented yet.")
+
+    
+    def predictWithSQL(self, currentDB, estimatorMeta, sql):
+
+        # X = FormulaProcessor(estimatorMeta.formula).getXFromSQL(currentDB, sql)
+        df, X = FormulaProcessor(estimatorMeta.formula).getDfAndXFromSQL(currentDB, sql, onlyPredictors=True)
+        
+        if estimatorMeta.estimatorType == 'LR':
+            estimatorManager = LRManager()
+            predictions = estimatorManager.predict(estimatorMeta.name, X)
+            df['prediction'] = predictions
+            # df['error %'] = estimatorManager.getPercentageError()
+            return df

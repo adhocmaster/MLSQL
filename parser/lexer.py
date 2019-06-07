@@ -10,7 +10,9 @@ from tokens.data_types import *
 keywords = list(set().union(
             modelTokens,
             trainTokens,
-            trainProfileTokens
+            trainProfileTokens,
+            predictTokens,
+            utilityTokens
             ))
 tokens =  list(set().union(
 
@@ -19,7 +21,17 @@ tokens =  list(set().union(
 
             )) + keywords
 
-print(tokens)
+# print(tokens)
+
+def t_BOOL(t):
+    r'true|false'
+    if t.value == 'true':
+        t.value = True
+    else:
+        t.value = False
+    
+    return t
+
 
 def t_SQL(t):
     r'\[\s*[SELECT,UPDATE]+[^\];]*\]'
@@ -54,7 +66,7 @@ def t_TRAINING_PROFILE(t):
     r'TRAINING[_ \t\n]+PROFILE'
     t.type = 'TRAINING_PROFILE'
     t.value = 'TRAINING_PROFILE'
-    print("found t_TRAINING_PROFILE")
+    # print("found t_TRAINING_PROFILE")
     return t
 
 
@@ -62,21 +74,21 @@ def t_LEARNING_RATE(t):
     r'LEARNING[_ \t\n]+RATE'
     t.type = 'LEARNING_RATE'
     t.value = 'LEARNING_RATE'
-    print("found t_LEARNING_RATE")
+    # print("found t_LEARNING_RATE")
     return t
 
 def t_VALIDATION_SPLIT(t):
     r'VALIDATION[_ \t\n]+SPLIT'
     t.type = 'VALIDATION_SPLIT'
     t.value = 'VALIDATION_SPLIT'
-    print("found t_VALIDATION_SPLIT")
+    # print("found t_VALIDATION_SPLIT")
     return t
 
 def t_FORMULA_OPERATOR(t):
     r'~'
     t.type = 'FORMULA_OPERATOR'
     t.value = 'FORMULA_OPERATOR'
-    print("found t_FORMULA_OPERATOR")
+    # print("found t_FORMULA_OPERATOR")
     return t
 
     

@@ -5,8 +5,15 @@ CREATE TRAINING_PROFILE oneshotSalary WITH [SELECT * FROM salary] AND VALIDATION
 CREATE TRAINING_PROFILE oneshotSalary2 WITH [SELECT * FROM salary] AND VALIDATION_SPLIT 0.2 BATCH_SIZE 32 EPOCH 10;
 CREATE TRAINING_PROFILE oneshotSalary WITH [SELECT * FROM salary] AND VALIDATION_SPLIT 0.2 BATCH_SIZE 32 EPOCH 10 SHUFFLE true ;
 
+USE 'test/salarydb.db';
 
+TRAIN salaryPredictor WITH oneshotSalary;
 TRAIN salaryPredictor WITH TRAINING_PROFILE oneshotSalary;
-TRAIN salaryPredictor WITH TRAINING PROFILE oneshotSalary;
 
-USE 'data/salarydb.db';
+
+CLONE ESTIMATOR salaryPredictor AS clonedSalaryPredictor;
+TRAIN clonedSalaryPredictor WITH oneshotSalary;
+
+PREDICT WITH TRAINING PROFILE oneshotSalary BY ESTIMATOR salaryPredictor;
+
+PREDICT WITH [SELECT * FROM salary] BY ESTIMATOR salaryPredictor;
