@@ -47,10 +47,37 @@ Syntax: TRAIN **estimator_name** WITH **profile_name**;
 
 Example: TRAIN **salaryPredictor** WITH **oneshotSalary**;
 
+## Predicting
+
+Pre-requisite:
+- First choose the source database 
+- Make sure the model is trained
+
+1. Predicting with existing training profile
+
+Syntax: PREDICT WITH TRAINING PROFILE **profile_name** BY ESTIMATOR **estimator_name**;
+
+Example: PREDICT WITH TRAINING PROFILE **oneshotSalary** BY ESTIMATOR **salaryPredictor**;
+
+2. Predicting with and SQL
+
+Syntax: PREDICT WITH [**SQL**] BY ESTIMATOR **estimator_name**;
+
+Example: PREDICT WITH [**SELECT * FROM salary**] BY ESTIMATOR **salaryPredictor**;
+
 # Advanced Usage:
-1. Reusing an estimator
-2. Reusing a training profile
-3. Cloning an estimator
+1. Reusing a training profile
+
+You may use the same training profile to train other models. Just use the training syntax.
+
+2. Cloning an estimator
+
+Cloning an estimator helps if you want to train a model with different datasets.
+
+Syntax: CLONE ESTIMATOR **estimator_name** AS **new_estimator_name**;
+
+Example: CLONE ESTIMATOR **salaryPredictor** AS **clonedSalaryPredictor**;
+
 
 # Available ML tools:
 1. Linear Regresstion (LR)
